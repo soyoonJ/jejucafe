@@ -1,3 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+    <!-- Bulma CSS 링크 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+
+
+    <title>돌하르방의 티타임 | 메인페이지</title>
+    <style>
+        /*모달 style*/
+        .background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.3);
+            z-index: 10;
+        }
+
+        .window {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .popup {
+            width: 500px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #ffffff;
+            box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3);
+        }
+
+
+
+        .new-cafebox {
+            display: none;
+            width: 500px;
+            margin: auto;
+            border-style: solid;
+            border-radius: 10px;
+            padding: 30px 50px 50px 30px;
+            margin-top: 50px;
+        }
+
+        .cards-wrap {
+            margin-top: 50px;
+        }
+
+    </style>
+    <script>
+        function open() {
+
+        }
+
+        document.querySelector("#open").addEventListener('click', open);
+
+    </script>
+</head>
+<body>
+
+<!--메인페이지 네비게이션 바-->
+
+<section class="hero is-warning">
+  <div class="hero-body">
+    <p class="title">
+      돌하르방의 티타임
+    </p>
+  </div>
+</section>
+
+<!--하단 바-->
+<nav class="level">
+    <!-- Left side (빈공간) -->
+    <div class="level-left">
+    </div>
+
+    <!-- Right side -->
+    <div class="level-right">
+        <div class="level-item">
+            <div style="display: inline-block">
+                <select name="area">
+                    <option value="지역전체" selected="selected">지역전체</option>
+                    <option value="제주시">제주시</option>
+                    <option value="제주동부">제주동부</option>
+                    <option value="서귀포">서귀포</option>
+                    <option value="제주서부">제주서부</option>
+                </select>
+            </div>
+        </div>
+        <div class="level-item">
+            <div class="field has-addons">
+                <p class="control">
+                    <input class="input" type="text" placeholder="Find a cafe">
+                </p>
+                <p class="control">
+                    <button class="button">
+                        Search
+                    </button>
+                </p>
+            </div>
+        </div>
+        <p class="level-item"><a class="button is-success">New</a></p>
+    </div>
+</nav>
+
+
+신규포스팅 박스 display: none 해둔 상태입니다!
+
+<!--모달 창-->
+<div class="background">
+  <div class="window">
+    <div class="popup"></div>
+      <button id="close">X</button>
+  </div>
+</div>
+
+<!--신규카페 포스팅 박스-->
+    <form class="new-cafebox">
+        <div class="form-group">
+            <label for="exampleInputcafe">카페명</label>
+            <input type="text" class="form-control" id="exampleInputcafe" aria-describedby="emailHelp" placeholder="">
+        </div>
+        <div>
+            <label class="my-1 mr-2" for="inlineFormCustomSelectPref">지역</label>
+            <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+                <option selected>지역선택</option>
+                <option value="1">제주시</option>
+                <option value="2">제주동부</option>
+                <option value="3">서귀포</option>
+                <option value="4">제주서부</option>
+            </select>
+        </div><br>
+        <div class="form-group">
+            <label for="exampleInputEmail1">세부주소</label>
+            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="ex) 제주시 공항로 2">
+        </div>
+
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+
+
+
+<!--카드-->
+<div class="card-columns cards-wrap">
+    <div class="card" id="open">
+    <img class="card-img-top" src="http://www.jemin.com/news/photo/201708/464885_149525_5955.jpeg" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Card title that wraps to a new line</h5>
+      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+    </div>
+  </div>
+    <div class="card">
+    <img class="card-img-top" src="http://www.jemin.com/news/photo/201708/464885_149525_5955.jpeg" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Card title that wraps to a new line</h5>
+      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+    </div>
+  </div>
+    <div class="card">
+    <img class="card-img-top" src="http://www.jemin.com/news/photo/201708/464885_149525_5955.jpeg" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Card title that wraps to a new line</h5>
+      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+    </div>
+  </div>
+    <div class="card">
+    <img class="card-img-top" src="http://www.jemin.com/news/photo/201708/464885_149525_5955.jpeg" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Card title that wraps to a new line</h5>
+      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+    </div>
+  </div>
+    <div class="card">
+    <img class="card-img-top" src="http://www.jemin.com/news/photo/201708/464885_149525_5955.jpeg" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Card title that wraps to a new line</h5>
+      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+    </div>
+  </div>
+    <div class="card">
+    <img class="card-img-top" src="http://www.jemin.com/news/photo/201708/464885_149525_5955.jpeg" alt="Card image cap">
+    <div class="card-body">
+      <h5 class="card-title">Card title that wraps to a new line</h5>
+      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+    </div>
+  </div>
+
+</div>
+
+
+</body>
+=======
 <!Doctype html>
 <html lang="ko">
 
@@ -202,4 +417,5 @@
         </div>
     </body>
 
+>>>>>>> c184ed7e197f78f5bbd41d367fb765e296d87c75
 </html>
