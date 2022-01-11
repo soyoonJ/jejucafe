@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 
     <!-- font-awesome 링크  -->
-    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/23b05056a7.js" crossorigin="anonymous"></script>
 
     <title>돌하르방의 티타임 | 메인페이지</title>
     <style>
@@ -37,7 +37,6 @@
             font-weight: bold;
             line-height: 80px;
         }
-
 
 
         body, html {
@@ -107,9 +106,26 @@
             height: 15vw;
             object-fit: cover;
         }
+
         /*카드 hover시 커서 변경 및 크기 확대*/
         .card {
             margin-top: 10px;
+            position: relative;
+            z-index: 1;
+
+        }
+
+        .like-button {
+            clear: both;
+            position: absolute;
+            color: red;
+
+            display: inline-block;
+            text-align: right;
+            float: right;
+
+
+            z-index: 2;
         }
 
         .card:hover {
@@ -121,12 +137,26 @@
     </style>
     <script>
         $(document).ready(function () {
-                showComments();
-            });
-        {#score-box val 값이 SCORE일 경우, '점수를 입력해주세요' 창 띄워야 함#}
+            showComments();
+        });
+        {
+            #score - box
+            val
+            값이
+            SCORE일
+            경우, '점수를 입력해주세요'
+            창
+            띄워야
+            함
+            #
+        }
 
         function post() {
-            {#닉네임을 어디에서 가져오지?#}
+            {
+                #닉네임을
+                어디에서
+                가져오지 ? #
+            }
             let score = $('#score-box').val()
             let comment = $('#comment-box').val()
             $.ajax({
@@ -145,45 +175,77 @@
         }
 
         function showComments() {
-                $.ajax({
-                    type: "GET",
-                    url: "/api/read",
-                    data: {},
-                    success: function (response) {
-                        $('#saved_comments').empty()
-                        let lists = response['all_comments']
-                        for (let i=0; i<lists.length; i++){
-                            let nickname = lists[i]['nickname']
-                            let score = lists[i]['score']
-                            let comment = lists[i]['comment']
+            $.ajax({
+                type: "GET",
+                url: "/api/read",
+                data: {},
+                success: function (response) {
+                    $('#saved_comments').empty()
+                    let lists = response['all_comments']
+                    for (let i = 0; i < lists.length; i++) {
+                        let nickname = lists[i]['nickname']
+                        let score = lists[i]['score']
+                        let comment = lists[i]['comment']
 
-                            let temp_html = `<tr>
+                        let temp_html = `<tr>
                                                 <th scope="row">i</th>
                                                 <td>${nickname}</td>
                                                 <td>${score}</td>
                                                 <td>${comment}</td>
                                             </tr>`
-                            $('#saved_comments').append(temp_html)
-                        }
+                        $('#saved_comments').append(temp_html)
                     }
-                })
-            }
-
-        {#<!--포스팅박스 오픈/히든-->#}
-        {#function open() {#}
-        {#    if ($("#post-box").css("display") == "block") {#}
-        {#            $("#post-box").hide();#}
-        {#        } else {#}
-        {#            $("#post-box").show();#}
-        {#        }#}
-        {##}
-        {#document.querySelector("#open").addEventListener('click', open);#}
-
-        function change_url(val) {
-            window.location = '/api/posts/?area=' + val
+                }
+            })
         }
 
+        {
+            #<!--포스팅박스 오픈/히든-->
+            #
+        }
+        {
+            #function
+            open()
+            {
+                #
+            }
+            {
+                #    if($("#post-box").css("display") == "block")
+                {
+                    #
+                }
+                {
+                    #            $("#post-box").hide();
+                    #
+                }
+                {
+                    #
+                }
+            else
+                {
+                    #
+                }
+                {
+                    #            $("#post-box").show();
+                    #
+                }
+                {
+                    #
+                }
+                #
+            }
+            {
+                #
+                #
+            }
+            {
+                #document.querySelector("#open").addEventListener('click', open);
+                #
+            }
 
+            function change_url(val) {
+                window.location = '/api/posts/?area=' + val
+            }
 
 
     </script>
@@ -204,11 +266,11 @@
 
 <!--hero banner-->
 <div class="hero-image">
-  <div class="hero-text">
-    <h1 class="main-text">돌하르방의 티타임</h1><br>
-    <p>신규 카드를 추가해보세요</p><br>
-    <button>카페추가하기</button>
-  </div>
+    <div class="hero-text">
+        <h1 class="main-text">돌하르방의 티타임</h1><br>
+        <p>신규 카드를 추가해보세요</p><br>
+        <button>카페추가하기</button>
+    </div>
 </div>
 
 
@@ -241,68 +303,70 @@
 <!--카드내용-->
 <div class="cards-wrap">
 
-<!--하단 바-->
-<nav class="level search-margin">
-    <!-- Left side (빈공간) -->
-    <div class="level-left">
-    </div>
+    <!--하단 바-->
+    <nav class="level search-margin">
+        <!-- Left side (빈공간) -->
+        <div class="level-left">
+        </div>
 
-    <!-- Right side -->
-    <div class="level-right">
-        <div class="level-item">
-            <div style="display: inline-block">
-                <select name="area" onchange="change_url(this.value);">
-                    <option value="" selected="selected">-지역선택-</option>
-                    <option value="지역전체">지역전체</option>
-                    <option value="제주시">제주시</option>
-                    <option value="성산읍">제주동부</option>
-                    <option value="서귀포시">서귀포</option>
-                    <option value="애월읍">제주서부</option>
-                </select>
+        <!-- Right side -->
+        <div class="level-right">
+            <div class="level-item">
+                <div style="display: inline-block">
+                    <select name="area" onchange="change_url(this.value);">
+                        <option value="" selected="selected">-지역선택-</option>
+                        <option value="지역전체">지역전체</option>
+                        <option value="제주시">제주시</option>
+                        <option value="성산읍">제주동부</option>
+                        <option value="서귀포시">서귀포</option>
+                        <option value="애월읍">제주서부</option>
+                    </select>
+                </div>
+            </div>
+            <div class="level-item">
+                <div class="field has-addons">
+                    <p class="control">
+                        <input class="input" type="text" placeholder="Find a cafe">
+                    </p>
+                    <p class="control">
+                        <button class="button">
+                            Search
+                        </button>
+                    </p>
+                </div>
             </div>
         </div>
-        <div class="level-item">
-            <div class="field has-addons">
-                <p class="control">
-                    <input class="input" type="text" placeholder="Find a cafe">
-                </p>
-                <p class="control">
-                    <button class="button">
-                        Search
-                    </button>
-                </p>
+
+    </nav>
+
+
+    <!--카드-->
+    <!--빈하트 <i class="fa fa-heart-o" aria-hidden="true"></i>-->
+    <!--색칠된하트<i class="fa fa-heart" aria-hidden="true"></i>-->
+
+    <div class="card-columns">
+
+
+        <i class="fa fa-heart-o" aria-hidden="true"></i>
+
+        {# jinja2 카드 내용 불러오기 #}
+        {% for cafe in cafe_lists %}
+        <div class="card" onclick='$("#modal-post").addClass("is-active")'>
+            <div href="#" class="like-button">
+                <i class="fas fa-heart"></i>
+                <i class="far fa-heart"></i>
+            </div>
+            <img class="card-img-top" src="{{ cafe.cafe_thumbnail_url }}"
+                 alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title"><b>{{ cafe.cafe_name }}</b></h5>
+                <p class="card-text">{{ cafe.cafe_address }}</p>
             </div>
         </div>
+        {% endfor %}
+
+
     </div>
-
-</nav>
-
-
-
-<!--카드-->
-<!--빈하트 <i class="fa fa-heart-o" aria-hidden="true"></i>-->
-<!--색칠된하트<i class="fa fa-heart" aria-hidden="true"></i>-->
-
-<div class="card-columns">
-
-
-    <i class="fa fa-heart-o" aria-hidden="true"></i>
-
-    {# jinja2 카드 내용 불러오기 #}
-    {% for cafe in cafe_lists %}
-    <div class="card" onclick='$("#modal-post").addClass("is-active")'>
-        <img class="card-img-top" src="{{ cafe.cafe_thumbnail_url }}"
-             alt="Card image cap">
-        <div class="card-body">
-            <h5 class="card-title"><b>{{ cafe.cafe_name }}</b></h5>
-            <p class="card-text">{{ cafe.cafe_address }}</p>
-        </div>
-    </div>
-    {% endfor %}
-
-
-
-</div>
 
 </div>
 
@@ -316,42 +380,42 @@
                 <div class="media-content">
                     <div class="field">
                         <p class="control">
-                            <table class="table table-hover">
-                                <thead>
-                                <tr>
-                                    <th scope="col"></th>
-                                    <th scope="col">닉네임</th>
-                                    <th scope="col">점수</th>
-                                    <th scope="col">코멘트</th>
-                                </tr>
-                                </thead>
-                                <tbody id="saved_comments">
-                                <tr>
-                                    <th scope="row">1</th>
-                                    <td>Mark</td>
-                                    <td>5</td>
-                                    <td>맛있어요!</td>
-                                </tr>
-                                <tr>
-                                    <th scope="row">2</th>
-                                    <td>Hodoo</td>
-                                    <td>3</td>
-                                    <td>맛있는데 직원분이 불친절해서 2점 뺐어요</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                            <div class="btn-group">
-                                <select class="custom-select my-1 mr-sm-2" id="score-box">
-                                    <option selected>SCORE</option>
-                                    <option value="5">5</option>
-                                    <option value="4">4</option>
-                                    <option value="3">3</option>
-                                    <option value="2">2</option>
-                                    <option value="1">1</option>
-                                </select>
-                            </div>
+                        <table class="table table-hover">
+                            <thead>
+                            <tr>
+                                <th scope="col"></th>
+                                <th scope="col">닉네임</th>
+                                <th scope="col">점수</th>
+                                <th scope="col">코멘트</th>
+                            </tr>
+                            </thead>
+                            <tbody id="saved_comments">
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>5</td>
+                                <td>맛있어요!</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Hodoo</td>
+                                <td>3</td>
+                                <td>맛있는데 직원분이 불친절해서 2점 뺐어요</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                        <div class="btn-group">
+                            <select class="custom-select my-1 mr-sm-2" id="score-box">
+                                <option selected>SCORE</option>
+                                <option value="5">5</option>
+                                <option value="4">4</option>
+                                <option value="3">3</option>
+                                <option value="2">2</option>
+                                <option value="1">1</option>
+                            </select>
+                        </div>
 
-                            <textarea class="textarea" placeholder="코멘트를 작성하세요"></textarea>
+                        <textarea class="textarea" placeholder="코멘트를 작성하세요"></textarea>
                         </p>
                     </div>
                     <nav class="level is-mobile">
