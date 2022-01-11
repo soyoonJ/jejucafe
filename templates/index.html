@@ -139,24 +139,8 @@
         $(document).ready(function () {
             showComments();
         });
-        {
-            #score - box
-            val
-            값이
-            SCORE일
-            경우, '점수를 입력해주세요'
-            창
-            띄워야
-            함
-            #
-        }
 
         function post() {
-            {
-                #닉네임을
-                어디에서
-                가져오지 ? #
-            }
             let score = $('#score-box').val()
             let comment = $('#comment-box').val()
             $.ajax({
@@ -181,8 +165,8 @@
                 data: {},
                 success: function (response) {
                     $('#saved_comments').empty()
-                    let lists = response['all_comments']
-                    for (let i = 0; i < lists.length; i++) {
+                    let lists = response['all_replies']
+                    for (let i = 0; i<lists.length; i++) {
                         let nickname = lists[i]['nickname']
                         let score = lists[i]['score']
                         let comment = lists[i]['comment']
@@ -199,55 +183,26 @@
             })
         }
 
-        {
-            #<!--포스팅박스 오픈/히든-->
-            #
+
+        function change_url(val) {
+            window.location = '/api/posts/?area=' + val
         }
-        {
-            #function
-            open()
-            {
-                #
-            }
-            {
-                #    if($("#post-box").css("display") == "block")
-                {
-                    #
-                }
-                {
-                    #            $("#post-box").hide();
-                    #
-                }
-                {
-                    #
-                }
-            else
-                {
-                    #
-                }
-                {
-                    #            $("#post-box").show();
-                    #
-                }
-                {
-                    #
-                }
-                #
-            }
-            {
-                #
-                #
-            }
-            {
-                #document.querySelector("#open").addEventListener('click', open);
-                #
-            }
 
-            function change_url(val) {
-                window.location = '/api/posts/?area=' + val
-            }
+        function like_post(name) {
+            $.ajax({
+                type: "POST",
+                url: "/api/like",
+                data: {
+                    cafe_name_give: name,
+                    user_name_give: `{{user_info['username']}}`
+                },
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload();
 
-
+                }
+            });
+        }
     </script>
 </head>
 <body>
@@ -347,21 +302,27 @@
     <div class="card-columns">
 
 
-        <i class="fa fa-heart-o" aria-hidden="true"></i>
-
         {# jinja2 카드 내용 불러오기 #}
         {% for cafe in cafe_lists %}
-        <div class="card" onclick='$("#modal-post").addClass("is-active")'>
-            <div href="#" class="like-button">
+
+        <!--        <div class="card" onclick='$("#modal-post").addClass("is-active")'>-->
+        <div class="card">
+            <div href="#" class="like-button" onclick="like_post('{{cafe.cafe_name}}') ">
+                {% if cafe.cafe_name in user_info.like%}
                 <i class="fas fa-heart"></i>
+                {% else %}
                 <i class="far fa-heart"></i>
+                {% endif %}
             </div>
-            <img class="card-img-top" src="{{ cafe.cafe_thumbnail_url }}"
-                 alt="Card image cap">
-            <div class="card-body">
-                <h5 class="card-title"><b>{{ cafe.cafe_name }}</b></h5>
-                <p class="card-text">{{ cafe.cafe_address }}</p>
+            <div onclick='$("#modal-post").addClass("is-active")'>
+                <img class="card-img-top" src="{{ cafe.cafe_thumbnail_url }}"
+                     alt="Card image cap">
+                <div class="card-body">
+                    <h5 class="card-title"><b>{{ cafe.cafe_name }}</b></h5>
+                    <p class="card-text">{{ cafe.cafe_address }}</p>
+                </div>
             </div>
+
         </div>
         {% endfor %}
 

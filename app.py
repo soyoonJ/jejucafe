@@ -16,7 +16,7 @@ client = MongoClient('13.209.87.246', 27017, username="test", password="test")
 db = client.dbsparta
 
 SECRET_KEY = 'JEJU'
-
+app.secret_key = "JEJU"
 
 ## HTML을 주는 부분
 @app.route('/')
@@ -64,11 +64,13 @@ def sign_up():
     username_receive = request.form['username_give']
     password_receive = request.form['password_give']
     nickname_receive = request.form['nickname_give']
+    like = []
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
     doc = {
         "username": username_receive,
         "password": password_hash,
         "nickname": nickname_receive,
+        "like": like
     }
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
@@ -126,6 +128,27 @@ def listing():
 
     return jsonify({'all_replies':replies})
 
+
+@app.route('/api/like', methods=['POST'])
+def like():
+    cafe_name_receive = request.form['cafe_name_give']
+    user_name_receive = request.form['user_name_give']
+
+    #찜해둔 카페 리스트 받아오기
+    likes = db.users.find_one({"username": user_name_receive}, {"_id": False})["like"]
+
+    #목록 안에 받아온 카페가 있을때
+    if cafe_name_receive in likes:
+        db.users.update_one(
+            {"username": user_name_receive}, {"$pull": {"like": cafe_name_receive}}
+        )
+        return jsonify({"msg": "찜 해제 완료"})
+   #목록안에 받아온 카페가 없을때
+    else:
+        db.users.update_one(
+            {"username": user_name_receive}, {"$push": {"like": cafe_name_receive}}
+        )
+        return jsonify({"msg": "찜하기 완료"})
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
