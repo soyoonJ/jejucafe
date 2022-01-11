@@ -160,6 +160,8 @@ def write_review():
 
 @app.route('/api/read', methods=['GET'])
 def listing():
+    # Modal 에서 코멘트 조회를 위해 showComments(cafe_name)으로 접근하고,
+    # /api/read?cafe_name=카페이름 형태로 AJAX get 요청하면 ?cafe_name= 이하의 값을 request.args.get(...)으로 가져옴
     cafe_name_receive = request.args.get('cafe_name')
     replies = list(db.jejucafedbcomment.find({"cafe": cafe_name_receive}, {'_id': False}))
 
