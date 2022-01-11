@@ -89,5 +89,20 @@ def check_nickname():
     return jsonify({'result': 'success', 'exists': exists})
 
 
+@app.route('/api/posts/', methods=['GET'])
+def main():
+    # DB에서 저장된 카페 목록 찾아서 HTML에 나타내기
+    cafe_area = request.args.get('area')
+    # area값이 포함되어 접근했을 경우
+    if cafe_area in ["제주시", "서귀포시", "성산읍", "애월읍"]:
+        cafe_lists = list(db.jejucafedb.find({"cafe_area":cafe_area}, {"_id": False}))
+    elif cafe_area == "지역전체":
+        cafe_lists = list(db.jejucafedb.find({}, {"_id": False}))
+    # 전체 페이지 조회로 접근했을 경우
+    else:
+        cafe_lists = list(db.jejucafedb.find({}, {"_id": False}))
+    return render_template("main-page.html", cafe_lists=cafe_lists)
+
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
