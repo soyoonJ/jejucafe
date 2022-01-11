@@ -1,0 +1,12 @@
+diff a/templates/index.html b/templates/index.html	(rejected hunks)
+@@ -79,6 +79,10 @@
+             margin-top: 50px;
+         }
+ 
++        .btn_newcafe {
++            margin-top: 10px;
++        }
++
+ 
+         .search-margin {
+             margin-top: 60px;
