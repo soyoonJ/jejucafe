@@ -23,36 +23,51 @@
     <!-- Bulma CSS 링크 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
 
+    <!-- font-awesome 링크  -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 
     <title>돌하르방의 티타임 | 메인페이지</title>
     <style>
-        /*모달 style*/
-        .background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.3);
-            z-index: 10;
+        .nav-left {
+            float: left;
         }
 
-        .window {
+        .nav-right {
+            float: right;
+            font-weight: bold;
+            line-height: 80px;
+        }
+
+
+
+        body, html {
+            height: 100%;
+        }
+
+        /* The hero image */
+        .hero-image {
+            background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("http://localguide.co.kr/wp-content/uploads/2020/07/20200110-g100-0761-1-e1597759075396-2048x732.jpeg");
+            height: 50%;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
             position: relative;
-            width: 100%;
-            height: 100%;
         }
 
-        .popup {
-            width: 500px;
+        .hero-text {
+            text-align: center;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            background-color: #ffffff;
-            box-shadow: 0 2px 7px rgba(0, 0, 0, 0.3);
+            color: white;
         }
 
+        .main-text {
+            font-size: 60px;
+            font-weight: bold;
+            margin-top: 60px;
+        }
 
 
         .new-cafebox {
@@ -65,34 +80,169 @@
             margin-top: 50px;
         }
 
+
+        .search-margin {
+            margin-top: 60px;
+        }
+
+
         .cards-wrap {
-            margin-top: 50px;
+            width: 1200px;
+            margin: 10px auto 0px auto;
+        }
+
+        .put-icon img {
+            position: relative;
+        }
+
+        .put-icon i {
+            position: absolute;
+            float: right;
+
+            z-index: 1000;
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 15vw;
+            object-fit: cover;
+        }
+        /*카드 hover시 커서 변경 및 크기 확대*/
+        .card {
+            margin-top: 10px;
+        }
+
+        .card:hover {
+            opacity: 1;
+            transform: scale(1.05);
+            cursor: pointer;
         }
 
     </style>
     <script>
-        function open() {
+        $(document).ready(function () {
+                showComments();
+            });
+        {#score-box val 값이 SCORE일 경우, '점수를 입력해주세요' 창 띄워야 함#}
+
+        function post() {
+            {#닉네임을 어디에서 가져오지?#}
+            let score = $('#score-box').val()
+            let comment = $('#comment-box').val()
+            $.ajax({
+                type: "POST",
+                url: "/api/comment",
+                data: {
+                    nickname_give: nickname,
+                    score_give: score,
+                    comment_give: comment
+                },
+                success: function (response) {
+                    alert(response["msg"])
+                }
+            });
 
         }
 
-        document.querySelector("#open").addEventListener('click', open);
+        function showComments() {
+                $.ajax({
+                    type: "GET",
+                    url: "/api/read",
+                    data: {},
+                    success: function (response) {
+                        $('#saved_comments').empty()
+                        let lists = response['all_comments']
+                        for (let i=0; i<lists.length; i++){
+                            let nickname = lists[i]['nickname']
+                            let score = lists[i]['score']
+                            let comment = lists[i]['comment']
+
+                            let temp_html = `<tr>
+                                                <th scope="row">i</th>
+                                                <td>${nickname}</td>
+                                                <td>${score}</td>
+                                                <td>${comment}</td>
+                                            </tr>`
+                            $('#saved_comments').append(temp_html)
+                        }
+                    }
+                })
+            }
+
+        {#<!--포스팅박스 오픈/히든-->#}
+        {#function open() {#}
+        {#    if ($("#post-box").css("display") == "block") {#}
+        {#            $("#post-box").hide();#}
+        {#        } else {#}
+        {#            $("#post-box").show();#}
+        {#        }#}
+        {##}
+        {#document.querySelector("#open").addEventListener('click', open);#}
+
+        function change_url(val) {
+            window.location = '/api/posts/?area=' + val
+        }
+
+
+
 
     </script>
 </head>
 <body>
 
-<!--메인페이지 네비게이션 바-->
+<!--네비게이션 바-->
+<nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand nav-left">
+        <a class="navbar-item">
+            <img src="">
+            <strong class="is-sparta"
+                    style="font-family: 'Stylish', sans-serif;font-size: larger;">Home</strong>
+        </a>
+    </div>
+    <div class="nav-right"><a href="/api/login">로그아웃</a></div>
+</nav>
 
-<section class="hero is-warning">
-  <div class="hero-body">
-    <p class="title">
-      돌하르방의 티타임
-    </p>
+<!--hero banner-->
+<div class="hero-image">
+  <div class="hero-text">
+    <h1 class="main-text">돌하르방의 티타임</h1><br>
+    <p>신규 카드를 추가해보세요</p><br>
+    <button>카페추가하기</button>
   </div>
-</section>
+</div>
+
+
+<!--신규카페 포스팅 박스-->
+<form class="new-cafebox" id="post-box">
+    <div class="form-group">
+        <label for="exampleInputcafe">카페명</label>
+        <input type="text" class="form-control" id="exampleInputcafe" aria-describedby="emailHelp" placeholder="">
+    </div>
+    <div>
+        <label class="my-1 mr-2" for="inlineFormCustomSelectPref">지역</label>
+        <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+            <option selected value="">지역선택</option>
+            <option value="제주시">제주시</option>
+            <option value="성산읍">제주동부</option>
+            <option value="서귀포시">서귀포</option>
+            <option value="애월읍">제주서부</option>
+        </select>
+    </div>
+    <br>
+    <div class="form-group">
+        <label for="exampleInputEmail1">세부주소</label>
+        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+               placeholder="ex) 제주시 공항로 2">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<!--카드내용-->
+<div class="cards-wrap">
 
 <!--하단 바-->
-<nav class="level">
+<nav class="level search-margin">
     <!-- Left side (빈공간) -->
     <div class="level-left">
     </div>
@@ -101,12 +251,13 @@
     <div class="level-right">
         <div class="level-item">
             <div style="display: inline-block">
-                <select name="area">
-                    <option value="지역전체" selected="selected">지역전체</option>
+                <select name="area" onchange="change_url(this.value);">
+                    <option value="" selected="selected">-지역선택-</option>
+                    <option value="지역전체">지역전체</option>
                     <option value="제주시">제주시</option>
-                    <option value="제주동부">제주동부</option>
-                    <option value="서귀포">서귀포</option>
-                    <option value="제주서부">제주서부</option>
+                    <option value="성산읍">제주동부</option>
+                    <option value="서귀포시">서귀포</option>
+                    <option value="애월읍">제주서부</option>
                 </select>
             </div>
         </div>
@@ -122,300 +273,110 @@
                 </p>
             </div>
         </div>
-        <p class="level-item"><a class="button is-success">New</a></p>
     </div>
+
 </nav>
-
-
-신규포스팅 박스 display: none 해둔 상태입니다!
-
-<!--모달 창-->
-<div class="background">
-  <div class="window">
-    <div class="popup"></div>
-      <button id="close">X</button>
-  </div>
-</div>
-
-<!--신규카페 포스팅 박스-->
-    <form class="new-cafebox">
-        <div class="form-group">
-            <label for="exampleInputcafe">카페명</label>
-            <input type="text" class="form-control" id="exampleInputcafe" aria-describedby="emailHelp" placeholder="">
-        </div>
-        <div>
-            <label class="my-1 mr-2" for="inlineFormCustomSelectPref">지역</label>
-            <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
-                <option selected>지역선택</option>
-                <option value="1">제주시</option>
-                <option value="2">제주동부</option>
-                <option value="3">서귀포</option>
-                <option value="4">제주서부</option>
-            </select>
-        </div><br>
-        <div class="form-group">
-            <label for="exampleInputEmail1">세부주소</label>
-            <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="ex) 제주시 공항로 2">
-        </div>
-
-        <button type="submit" class="btn btn-primary">Submit</button>
-    </form>
 
 
 
 <!--카드-->
-<div class="card-columns cards-wrap">
-    <div class="card" id="open">
-    <img class="card-img-top" src="http://www.jemin.com/news/photo/201708/464885_149525_5955.jpeg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Card title that wraps to a new line</h5>
-      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-    </div>
-  </div>
-    <div class="card">
-    <img class="card-img-top" src="http://www.jemin.com/news/photo/201708/464885_149525_5955.jpeg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Card title that wraps to a new line</h5>
-      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-    </div>
-  </div>
-    <div class="card">
-    <img class="card-img-top" src="http://www.jemin.com/news/photo/201708/464885_149525_5955.jpeg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Card title that wraps to a new line</h5>
-      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-    </div>
-  </div>
-    <div class="card">
-    <img class="card-img-top" src="http://www.jemin.com/news/photo/201708/464885_149525_5955.jpeg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Card title that wraps to a new line</h5>
-      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-    </div>
-  </div>
-    <div class="card">
-    <img class="card-img-top" src="http://www.jemin.com/news/photo/201708/464885_149525_5955.jpeg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Card title that wraps to a new line</h5>
-      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-    </div>
-  </div>
-    <div class="card">
-    <img class="card-img-top" src="http://www.jemin.com/news/photo/201708/464885_149525_5955.jpeg" alt="Card image cap">
-    <div class="card-body">
-      <h5 class="card-title">Card title that wraps to a new line</h5>
-      <p class="card-text">This is a longer card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-    </div>
-  </div>
+<!--빈하트 <i class="fa fa-heart-o" aria-hidden="true"></i>-->
+<!--색칠된하트<i class="fa fa-heart" aria-hidden="true"></i>-->
 
+<div class="card-columns">
+
+
+    <i class="fa fa-heart-o" aria-hidden="true"></i>
+
+    {# jinja2 카드 내용 불러오기 #}
+    {% for cafe in cafe_lists %}
+    <div class="card" onclick='$("#modal-post").addClass("is-active")'>
+        <img class="card-img-top" src="{{ cafe.cafe_thumbnail_url }}"
+             alt="Card image cap">
+        <div class="card-body">
+            <h5 class="card-title"><b>{{ cafe.cafe_name }}</b></h5>
+            <p class="card-text">{{ cafe.cafe_address }}</p>
+        </div>
+    </div>
+    {% endfor %}
+
+
+
+</div>
+
+</div>
+
+<!--카드 클릭 시 팝업되는 모달-->
+<!--클릭한 카드에 대한 개별화된 모달로 업데이트 필요-->
+<div class="modal" id="modal-post">
+    <div class="modal-background" onclick='$("#modal-post").removeClass("is-active")'></div>
+    <div class="modal-content">
+        <div class="box">
+            <article class="media">
+                <div class="media-content">
+                    <div class="field">
+                        <p class="control">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th scope="col"></th>
+                                    <th scope="col">닉네임</th>
+                                    <th scope="col">점수</th>
+                                    <th scope="col">코멘트</th>
+                                </tr>
+                                </thead>
+                                <tbody id="saved_comments">
+                                <tr>
+                                    <th scope="row">1</th>
+                                    <td>Mark</td>
+                                    <td>5</td>
+                                    <td>맛있어요!</td>
+                                </tr>
+                                <tr>
+                                    <th scope="row">2</th>
+                                    <td>Hodoo</td>
+                                    <td>3</td>
+                                    <td>맛있는데 직원분이 불친절해서 2점 뺐어요</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="btn-group">
+                                <select class="custom-select my-1 mr-sm-2" id="score-box">
+                                    <option selected>SCORE</option>
+                                    <option value="5">5</option>
+                                    <option value="4">4</option>
+                                    <option value="3">3</option>
+                                    <option value="2">2</option>
+                                    <option value="1">1</option>
+                                </select>
+                            </div>
+
+                            <textarea class="textarea" placeholder="코멘트를 작성하세요"></textarea>
+                        </p>
+                    </div>
+                    <nav class="level is-mobile">
+                        <div class="level-left">
+
+                        </div>
+                        <div class="level-right">
+                            <div class="level-item">
+                                <a class="button is-sparta" onclick="post()">포스팅하기</a>
+                            </div>
+                            <div class="level-item">
+                                <a class="button is-sparta is-outlined"
+                                   onclick='$("#modal-post").removeClass("is-active")'>취소</a>
+                            </div>
+                        </div>
+                    </nav>
+                </div>
+            </article>
+        </div>
+    </div>
+    <button class="modal-close is-large" aria-label="close"
+            onclick='$("#modal-post").removeClass("is-active")'></button>
 </div>
 
 
 </body>
-=======
-<!Doctype html>
-<html lang="ko">
 
-    <head>
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-        <!-- Bootstrap CSS -->
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
-              integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
-              crossorigin="anonymous">
-
-        <!-- JS -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
-                integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
-                crossorigin="anonymous"></script>
-
-        <!-- 구글폰트 -->
-        <link href="https://fonts.googleapis.com/css?family=Stylish&display=swap" rel="stylesheet">
-
-
-        <title>스파르타코딩클럽 | 나홀로 메모장</title>
-
-        <!-- style -->
-        <style type="text/css">
-            * {
-                font-family: "Stylish", sans-serif;
-            }
-
-            .wrap {
-                width: 900px;
-                margin: auto;
-            }
-
-            .comment {
-                color: blue;
-                font-weight: bold;
-            }
-
-            #post-box {
-                width: 500px;
-                margin: 20px auto;
-                padding: 50px;
-                border: black solid;
-                border-radius: 5px;
-            }
-        </style>
-        <script>
-            $(document).ready(function () {
-                showArticles();
-            });
-
-            function openClose() {
-                if ($("#post-box").css("display") == "block") {
-                    $("#post-box").hide();
-                    $("#btn-post-box").text("포스팅 박스 열기");
-                } else {
-                    $("#post-box").show();
-                    $("#btn-post-box").text("포스팅 박스 닫기");
-                }
-            }
-
-            function postArticle() {
-                let url = $('#post-url').val()
-                let comment = $('#post-comment').val()
-
-                $.ajax({
-                    type: "POST",
-                    url: "/memo",
-                    data: {url_give:url, comment_give:comment},
-                    success: function (response) { // 성공하면
-                        alert(response["msg"]);
-                        window.location.reload()
-                    }
-                })
-            }
-
-            function showArticles() {
-                $('#cards-box').empty()
-
-                $.ajax({
-                    type: "GET",
-                    url: "/memo",
-                    data: {},
-                    success: function (response) {
-                        let articles = response['all_articles']
-                        for (let i=0; i < articles.length; i++) {
-                            let image = articles[i]['image']
-                            let title = articles[i]['title']
-                            let url = articles[i]['url']
-                            let desc = articles[i]['desc']
-                            let comment = articles[i]['comment']
-
-                            let temp_html = `<div class="card">
-                                                <img class="card-img-top"
-                                                     src=${image}
-                                                     alt="Card image cap">
-                                                <div class="card-body">
-                                                    <a target="_blank" href="${url}" class="card-title">${title}</a>
-                                                    <p class="card-text">${desc}</p>
-                                                    <p class="card-text comment">${comment}</p>
-                                                </div>
-                                            </div>`
-
-                            $('#cards-box').append(temp_html)
-                        }
-                    }
-                })
-            }
-        </script>
-
-    </head>
-
-    <body>
-        <div class="wrap">
-            <div class="jumbotron">
-                <h1 class="display-4">나홀로 링크 메모장!</h1>
-                <p class="lead">중요한 링크를 저장해두고, 나중에 볼 수 있는 공간입니다</p>
-                <hr class="my-4">
-                <p class="lead">
-                    <button onclick="openClose()" id="btn-post-box" type="button" class="btn btn-primary">포스팅 박스 열기
-                    </button>
-                </p>
-            </div>
-            <div id="post-box" class="form-post" style="display:none">
-                <div>
-                    <div class="form-group">
-                        <label for="post-url">아티클 URL</label>
-                        <input id="post-url" class="form-control" placeholder="">
-                    </div>
-                    <div class="form-group">
-                        <label for="post-comment">간단 코멘트</label>
-                        <textarea id="post-comment" class="form-control" rows="2"></textarea>
-                    </div>
-                    <button type="button" class="btn btn-primary" onclick="postArticle()">기사저장</button>
-                </div>
-            </div>
-            <div id="cards-box" class="card-columns">
-                <div class="card">
-                    <img class="card-img-top"
-                         src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                         alt="Card image cap">
-                    <div class="card-body">
-                        <a target="_blank" href="#" class="card-title">여기 기사 제목이 들어가죠</a>
-                        <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                        <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="card-img-top"
-                         src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                         alt="Card image cap">
-                    <div class="card-body">
-                        <a target="_blank" href="#" class="card-title">여기 기사 제목이 들어가죠</a>
-                        <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                        <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="card-img-top"
-                         src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                         alt="Card image cap">
-                    <div class="card-body">
-                        <a target="_blank" href="#" class="card-title">여기 기사 제목이 들어가죠</a>
-                        <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                        <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="card-img-top"
-                         src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                         alt="Card image cap">
-                    <div class="card-body">
-                        <a target="_blank" href="#" class="card-title">여기 기사 제목이 들어가죠</a>
-                        <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                        <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="card-img-top"
-                         src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                         alt="Card image cap">
-                    <div class="card-body">
-                        <a target="_blank" href="#" class="card-title">여기 기사 제목이 들어가죠</a>
-                        <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                        <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
-                    </div>
-                </div>
-                <div class="card">
-                    <img class="card-img-top"
-                         src="https://www.eurail.com/content/dam/images/eurail/Italy%20OCP%20Promo%20Block.adaptive.767.1535627244182.jpg"
-                         alt="Card image cap">
-                    <div class="card-body">
-                        <a target="_blank" href="#" class="card-title">여기 기사 제목이 들어가죠</a>
-                        <p class="card-text">기사의 요약 내용이 들어갑니다. 동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라만세 무궁화 삼천리 화려강산...</p>
-                        <p class="card-text comment">여기에 코멘트가 들어갑니다.</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </body>
-
->>>>>>> c184ed7e197f78f5bbd41d367fb765e296d87c75
 </html>

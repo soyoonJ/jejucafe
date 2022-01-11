@@ -101,6 +101,31 @@ def show_cafe_lists():
         cafe_lists = list(db.jejucafedb.find({}, {"_id": False}))
     return render_template("index.html", cafe_lists=cafe_lists)
 
+@app.route('/api/comment', methods=['POST'])
+def write_review():
+    nickname_receive = request.form['nickname_give']
+    score_receive = request.form['score_give']
+    comment_receive = request.form['comment_give']
+
+
+    # DB에 삽입할 review 만들기
+    doc = {
+        'nickname': nickname_receive,
+        'score': score_receive,
+        'comment': comment_receive
+    }
+    # reviews에 review 저장하기
+    db.jejucafedbcomment.insert_one(doc)
+    # 성공 여부 & 성공 메시지 반환
+    return jsonify({'msg': '코멘트 작성 완료!'})
+
+
+@app.route('/api/read', methods=['GET'])
+def listing():
+    replies = list(db.jejucafedbcomment.find({}, {'_id': False}))
+
+    return jsonify({'all_replies':replies})
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
