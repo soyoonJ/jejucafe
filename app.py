@@ -150,5 +150,23 @@ def like():
         )
         return jsonify({"msg": "찜하기 완료"})
 
+
+@app.route('/api/create', methods=['POST'])
+def Add_newcafe():
+    cafename_receive = request.form['CafeName_give']
+    cafearea_receive = request.form['CafeArea_give']
+    cafeaddress_receive = request.form['CafeAddress_give']
+
+    doc = {
+        "cafe_name": cafename_receive,
+        "cafe_area": cafearea_receive,
+        "cafe_address": cafeaddress_receive,
+    }
+
+    db.Newcafe.insert_one(doc)
+    return jsonify({'result': 'success', 'msg': ''})
+
+
+
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
