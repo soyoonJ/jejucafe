@@ -136,21 +136,20 @@
     </style>
     <script>
         $(document).ready(function () {
-                showComments();
+                // showComments();
             });
 
         function post() {
+            let cafe_name = $('#modal-post').attr('cafe_name');
             let score = $('#score-box').val()
             let comment = $('#comment-box').val()
-            let cafe_name = $('#card-selected').val()
-            console.log(cafe_name)
+
             $.ajax({
                 type: "POST",
                 url: "/api/comment",
                 data: {
                     cafe_name_give: cafe_name,
-                    user_name_give: `{{user_info['username']}}`,
-                    nickname_give: `{{user_info['nickname']}}`,
+                    nickname_give: `{{user_info['username']}}`,
                     score_give: score,
                     comment_give: comment
                 },
@@ -184,11 +183,11 @@
 
 
 
-        function showComments() {
+        function showComments(cafe_name) {
             $.ajax({
                 type: "GET",
                 url: "/api/read",
-                data: {},
+                data: { "cafe_name": cafe_name },
                 success: function (response) {
                     $('#saved_comments').empty()
                     let lists = response['all_replies']
@@ -198,6 +197,7 @@
                         let comment = lists[i]['comment']
 
                         let temp_html = `<tr>
+                                            <th scope="row">${i+1}</th>
                                             <td>${nickname}</td>
                                             <td>${score}</td>
                                             <td>${comment}</td>
@@ -351,7 +351,7 @@
                 <i class="far fa-heart"></i>
                 {% endif %}
             </div>
-            <div onclick='$("#modal-post").addClass("is-active")'>
+            <div onclick='$("#modal-post").addClass("is-active").attr("cafe_name", "{{cafe.cafe_name}}"); showComments("{{cafe.cafe_name}}")'>
                 <img class="card-img-top" src="{{ cafe.cafe_thumbnail_url }}"
                      alt="Card image cap">
                 <div class="card-body">
@@ -382,6 +382,7 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
+                                <th scope="col"></th>
                                 <th scope="col">닉네임</th>
                                 <th scope="col">점수</th>
                                 <th scope="col">코멘트</th>
@@ -389,11 +390,13 @@
                             </thead>
                             <tbody id="saved_comments">
                             <tr>
+                                <th scope="row">1</th>
                                 <td>Mark</td>
                                 <td>5</td>
                                 <td>맛있어요!</td>
                             </tr>
                             <tr>
+                                <th scope="row">2</th>
                                 <td>Hodoo</td>
                                 <td>3</td>
                                 <td>맛있는데 직원분이 불친절해서 2점 뺐어요</td>
