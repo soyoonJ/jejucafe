@@ -96,27 +96,59 @@ def check_nickname():
 def show_cafe_lists():
     # DB에서 저장된 카페 목록 찾아서 HTML에 나타내기
     cafe_area = request.args.get('area')
-    # area값이 포함되어 접근했을 경우
-    if cafe_area in ["제주시", "서귀포시", "성산읍", "애월읍"]:
-        cafe_lists = list(db.jejucafedb.find({"cafe_area":cafe_area}, {"_id": False}))
-    else:
-        cafe_lists = list(db.jejucafedb.find({}, {"_id": False}))
-    return render_template("index.html", cafe_lists=cafe_lists)
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"username": payload["id"]})
+        # area값이 포함되어 접근했을 경우
+        if cafe_area in ["제주시", "서귀포시", "성산읍", "애월읍"]:
+            cafe_lists = list(db.jejucafedb.find({"cafe_area": cafe_area}, {"_id": False}))
+        else:
+            cafe_lists = list(db.jejucafedb.find({}, {"_id": False}))
+        return render_template('index.html', user_info=user_info, cafe_lists=cafe_lists)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+
+
+@app.route('/api/mycafe/', methods=['GET'])
+def show_mycafe_lists():
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"username": payload["id"]})
+        pipeline = [{"$unwind": "$like"}, {
+            "$lookup": {"from": "jejucafedb", "localField": "like", "foreignField": "cafe_name",
+                        "as": "like_cafe_list"}},
+                    {"$match": {'username': user_info['username']}}]
+        cafe_like_list = list(db.users.aggregate(pipeline))
+        like_number = 0
+        cafe_lists = list()
+        for cafe_like in cafe_like_list:
+            cafe_lists.append(cafe_like_list[like_number]['like_cafe_list'][0])
+            like_number = like_number + 1
+        return render_template('index.html', user_info=user_info, cafe_lists=cafe_lists)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
 
 
 @app.route('/api/comment', methods=['POST'])
 def write_review():
-    cafe_name_receive = request.form['cafe_name_give']
-    nickname = db.users.find_one({"nickname": 'cafe_name_give'}, {"_id": False})
+    nickname_receive = request.form['nickname_give']
+    # cafe_name_receive = request.form['cafe_name_give']
+    # nickname = db.users.find_one({"nickname": 'cafe_name_give'}, {"_id": False})
     score_receive = request.form['score_give']
     comment_receive = request.form['comment_give']
 
 
     # DB에 삽입할 review 만들기
     doc = {
-        'cafe': cafe_name_receive,
-        'nickname': nickname,
+        # 'cafe': cafe_name_receive,
+        'nickname': nickname_receive,
         'score': score_receive,
         'comment': comment_receive
     }
@@ -171,7 +203,6 @@ def Add_newcafe():
 
     db.Newcafe.insert_one(doc)
     return jsonify({'result': 'success', 'msg': '카페가 추가되었습니다.'})
-
 
 
 
