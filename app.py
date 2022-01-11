@@ -25,7 +25,8 @@ def home():
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"username": payload["id"]})
-        return render_template('index.html', user_info=user_info)
+        cafe_lists = list(db.jejucafedb.find({}, {"_id": False}))
+        return render_template('index.html', user_info=user_info, cafe_lists=cafe_lists)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
     except jwt.exceptions.DecodeError:
@@ -90,18 +91,15 @@ def check_nickname():
 
 
 @app.route('/api/posts/', methods=['GET'])
-def main():
+def show_cafe_lists():
     # DB에서 저장된 카페 목록 찾아서 HTML에 나타내기
     cafe_area = request.args.get('area')
     # area값이 포함되어 접근했을 경우
     if cafe_area in ["제주시", "서귀포시", "성산읍", "애월읍"]:
         cafe_lists = list(db.jejucafedb.find({"cafe_area":cafe_area}, {"_id": False}))
-    elif cafe_area == "지역전체":
-        cafe_lists = list(db.jejucafedb.find({}, {"_id": False}))
-    # 전체 페이지 조회로 접근했을 경우
     else:
         cafe_lists = list(db.jejucafedb.find({}, {"_id": False}))
-    return render_template("main-page.html", cafe_lists=cafe_lists)
+    return render_template("index.html", cafe_lists=cafe_lists)
 
 
 if __name__ == '__main__':
