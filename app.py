@@ -170,7 +170,7 @@ def Add_newcafe():
     }
 
     db.Newcafe.insert_one(doc)
-    return jsonify({'result': 'success', 'msg': ''})
+    return jsonify({'result': 'success', 'msg': '카페가 추가되었습니다.'})
 
 
 
