@@ -138,16 +138,15 @@ def show_mycafe_lists():
 
 @app.route('/api/comment', methods=['POST'])
 def write_review():
+    cafe_name_receive = request.form['cafe_name_give']
     nickname_receive = request.form['nickname_give']
-    # cafe_name_receive = request.form['cafe_name_give']
-    # nickname = db.users.find_one({"nickname": 'cafe_name_give'}, {"_id": False})
     score_receive = request.form['score_give']
     comment_receive = request.form['comment_give']
 
 
     # DB에 삽입할 review 만들기
     doc = {
-        # 'cafe': cafe_name_receive,
+        'cafe': cafe_name_receive,
         'nickname': nickname_receive,
         'score': score_receive,
         'comment': comment_receive

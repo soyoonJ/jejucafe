@@ -135,22 +135,31 @@
 
     </style>
     <script>
+        $(document).ready(function () {
+                showComments();
+            });
+
         function post() {
             let score = $('#score-box').val()
             let comment = $('#comment-box').val()
+            let cafe_name = $('#card-selected').val()
+            console.log(cafe_name)
             $.ajax({
                 type: "POST",
                 url: "/api/comment",
                 data: {
-                    nickname_give: nickname,
+                    cafe_name_give: cafe_name,
+                    user_name_give: `{{user_info['username']}}`,
+                    nickname_give: `{{user_info['nickname']}}`,
                     score_give: score,
                     comment_give: comment
                 },
                 success: function (response) {
                     alert(response["msg"])
+                    window.location.reload();
+
                 }
             });
-
         }
 
         function Add_newcafe() {
@@ -173,11 +182,8 @@
             })
         }
 
-<<<<<<< HEAD
 
 
-=======
->>>>>>> a61e2402869bff4ec1fa4cbc69497dfc4e623e0f
         function showComments() {
             $.ajax({
                 type: "GET",
@@ -192,10 +198,11 @@
                         let comment = lists[i]['comment']
 
                         let temp_html = `<tr>
-                                                <td>${nickname}</td>
-                                                <td>${score}</td>
-                                                <td>${comment}</td>
-                                            </tr>`
+                                            <td>${nickname}</td>
+                                            <td>${score}</td>
+                                            <td>${comment}</td>
+                                        </tr>`
+                        console.log(temp_html)
                         $('#saved_comments').append(temp_html)
                     }
                 }
@@ -231,7 +238,6 @@
                 }
             });
         }
-
 
 
     </script>
@@ -337,7 +343,7 @@
         {% for cafe in cafe_lists %}
 
         <!--        <div class="card" onclick='$("#modal-post").addClass("is-active")'>-->
-        <div class="card">
+        <div class="card" id="selected-card">
             <div href="#" class="like-button" onclick="like_post('{{cafe.cafe_name}}')">
                 {% if cafe.cafe_name in user_info.like%}
                 <i class="fas fa-heart"></i>
@@ -349,7 +355,7 @@
                 <img class="card-img-top" src="{{ cafe.cafe_thumbnail_url }}"
                      alt="Card image cap">
                 <div class="card-body">
-                    <h5 class="card-title"><b>{{ cafe.cafe_name }}</b></h5>
+                    <h5 class="card-title" id="card-selected"><b>{{ cafe.cafe_name }}</b></h5>
                     <p class="card-text">{{ cafe.cafe_address }}</p>
                 </div>
             </div>
@@ -363,6 +369,8 @@
 
 <!--카드 클릭 시 팝업되는 모달-->
 <!--클릭한 카드에 대한 개별화된 모달로 업데이트 필요-->
+
+
 <div class="modal" id="modal-post">
     <div class="modal-background" onclick='$("#modal-post").removeClass("is-active")'></div>
     <div class="modal-content">
@@ -374,7 +382,6 @@
                         <table class="table table-hover">
                             <thead>
                             <tr>
-                                <th scope="col"></th>
                                 <th scope="col">닉네임</th>
                                 <th scope="col">점수</th>
                                 <th scope="col">코멘트</th>
@@ -382,13 +389,11 @@
                             </thead>
                             <tbody id="saved_comments">
                             <tr>
-                                <th scope="row">1</th>
                                 <td>Mark</td>
                                 <td>5</td>
                                 <td>맛있어요!</td>
                             </tr>
                             <tr>
-                                <th scope="row">2</th>
                                 <td>Hodoo</td>
                                 <td>3</td>
                                 <td>맛있는데 직원분이 불친절해서 2점 뺐어요</td>
@@ -406,7 +411,7 @@
                             </select>
                         </div>
 
-                        <textarea class="textarea" placeholder="코멘트를 작성하세요"></textarea>
+                        <textarea id="comment-box" class="textarea" placeholder="코멘트를 작성하세요"></textarea>
                         </p>
                     </div>
                     <nav class="level is-mobile">
