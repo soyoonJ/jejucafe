@@ -79,6 +79,10 @@
             margin-top: 50px;
         }
 
+        .btn_newcafe {
+            margin-top: 10px;
+        }
+
 
         .search-margin {
             margin-top: 60px;
@@ -119,9 +123,7 @@
         .like-button {
             position: absolute;
             color: red;
-            text-align: right;
-
-
+            right: 0;
             z-index: 2;
         }
 
@@ -155,6 +157,26 @@
 
         }
 
+        function Add_newcafe() {
+            let name = $('#New-name').val()
+            let Area = $('#New-Area').val()
+            let Address = $('#New-address').val()
+
+            $.ajax({
+                type: "POST",
+                url: "/api/create",
+                data: {
+                    CafeName_give: name,
+                    CafeArea_give: Area,
+                    CafeAddress_give: Address
+                },
+                success: function (response) {
+                    alert(response["msg"])
+                    window.location.reload()
+                }
+            })
+        }
+
         function showComments() {
             $.ajax({
                 type: "GET",
@@ -180,6 +202,15 @@
             })
         }
 
+        function openClose() {
+            let status = $('#post-box').css('display');
+            if (status == 'block') {
+                $('#post-box').hide();
+            } else {
+                $('#post-box').show();
+            }
+        }
+
 
         function change_url(val) {
             window.location = '/api/posts/?area=' + val
@@ -200,6 +231,8 @@
                 }
             });
         }
+
+
     </script>
 </head>
 <body>
@@ -220,21 +253,22 @@
 <div class="hero-image">
     <div class="hero-text">
         <h1 class="main-text">돌하르방의 티타임</h1><br>
-        <p>신규 카드를 추가해보세요</p><br>
-        <button>카페추가하기</button>
+        <p>신규 카페를 추가해보세요</p><br>
+        <button type="button" class="btn btn-outline-primary" onclick="openClose()">카페 추가하기</button>
     </div>
+
 </div>
 
 
 <!--신규카페 포스팅 박스-->
 <form class="new-cafebox" id="post-box">
     <div class="form-group">
-        <label for="exampleInputcafe">카페명</label>
-        <input type="text" class="form-control" id="exampleInputcafe" aria-describedby="emailHelp" placeholder="">
+        <label>카페명</label>
+        <input type="text" class="form-control" id="New-name" aria-describedby="emailHelp" placeholder="">
     </div>
     <div>
         <label class="my-1 mr-2" for="inlineFormCustomSelectPref">지역</label>
-        <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
+        <select class="custom-select my-1 mr-sm-2" id="New-Area">
             <option selected value="">지역선택</option>
             <option value="제주시">제주시</option>
             <option value="성산읍">제주동부</option>
@@ -245,11 +279,10 @@
     <br>
     <div class="form-group">
         <label for="exampleInputEmail1">세부주소</label>
-        <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+        <input type="text" class="form-control" id="New-address" aria-describedby="emailHelp"
                placeholder="ex) 제주시 공항로 2">
     </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="button" class="btn_newcafe" onclick="Add_newcafe()">추가</button>
 </form>
 
 <!--카드내용-->
@@ -298,29 +331,24 @@
 
     <div class="card-columns">
 
-
         {# jinja2 카드 내용 불러오기 #}
         {% for cafe in cafe_lists %}
 
         <!--        <div class="card" onclick='$("#modal-post").addClass("is-active")'>-->
         <div class="card">
-            <div href="#" class="like-button" onclick="like_post('{{cafe.cafe_name}}') "><span class="like-button">
+            <div href="#" class="like-button" onclick="like_post('{{cafe.cafe_name}}') ">
                 {% if cafe.cafe_name in user_info.like%}
                 <i class="fas fa-heart"></i>
                 {% else %}
                 <i class="far fa-heart"></i>
                 {% endif %}
-                </span>
             </div>
-            <div onclick='$("#modal-post").addClass("is-active")'>
-                <img class="card-img-top" src="{{ cafe.cafe_thumbnail_url }}"
-                     alt="Card image cap">
-                <div class="card-body">
-                    <h5 class="card-title"><b>{{ cafe.cafe_name }}</b></h5>
-                    <p class="card-text">{{ cafe.cafe_address }}</p>
-                </div>
+            <img class="card-img-top" src="{{ cafe.cafe_thumbnail_url }}"
+                 alt="Card image cap">
+            <div class="card-body">
+                <h5 class="card-title"><b>{{ cafe.cafe_name }}</b></h5>
+                <p class="card-text">{{ cafe.cafe_address }}</p>
             </div>
-
         </div>
         {% endfor %}
 

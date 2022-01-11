@@ -103,19 +103,24 @@ def show_cafe_lists():
         cafe_lists = list(db.jejucafedb.find({}, {"_id": False}))
     return render_template("index.html", cafe_lists=cafe_lists)
 
+
+
 @app.route('/api/comment', methods=['POST'])
 def write_review():
-    nickname_receive = request.form['nickname_give']
+    cafe_name_receive = request.form['cafe_name_give']
+    nickname = db.users.find_one({"nickname": 'cafe_name_give'}, {"_id": False})
     score_receive = request.form['score_give']
     comment_receive = request.form['comment_give']
 
 
     # DB에 삽입할 review 만들기
     doc = {
-        'nickname': nickname_receive,
+        'cafe': cafe_name_receive,
+        'nickname': nickname,
         'score': score_receive,
         'comment': comment_receive
     }
+
     # reviews에 review 저장하기
     db.jejucafedbcomment.insert_one(doc)
     # 성공 여부 & 성공 메시지 반환
@@ -129,26 +134,45 @@ def listing():
     return jsonify({'all_replies':replies})
 
 
+
 @app.route('/api/like', methods=['POST'])
 def like():
     cafe_name_receive = request.form['cafe_name_give']
     user_name_receive = request.form['user_name_give']
 
-    #찜해둔 카페 리스트 받아오기
+    # 찜해둔 카페 리스트 받아오기
     likes = db.users.find_one({"username": user_name_receive}, {"_id": False})["like"]
 
-    #목록 안에 받아온 카페가 있을때
+    # 목록 안에 받아온 카페가 있을때
     if cafe_name_receive in likes:
         db.users.update_one(
             {"username": user_name_receive}, {"$pull": {"like": cafe_name_receive}}
         )
         return jsonify({"msg": "찜 해제 완료"})
-   #목록안에 받아온 카페가 없을때
+   # 목록안에 받아온 카페가 없을때
     else:
         db.users.update_one(
             {"username": user_name_receive}, {"$push": {"like": cafe_name_receive}}
         )
         return jsonify({"msg": "찜하기 완료"})
+
+
+@app.route('/api/create', methods=['POST'])
+def Add_newcafe():
+    cafename_receive = request.form['CafeName_give']
+    cafearea_receive = request.form['CafeArea_give']
+    cafeaddress_receive = request.form['CafeAddress_give']
+
+    doc = {
+        "cafe_name": cafename_receive,
+        "cafe_area": cafearea_receive,
+        "cafe_address": cafeaddress_receive,
+    }
+
+    db.Newcafe.insert_one(doc)
+    return jsonify({'result': 'success', 'msg': ''})
+
+
 
 if __name__ == '__main__':
     app.run('0.0.0.0', port=5000, debug=True)
