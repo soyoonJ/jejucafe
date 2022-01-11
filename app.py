@@ -165,7 +165,8 @@ def write_review():
 
 @app.route('/api/read', methods=['GET'])
 def listing():
-    replies = list(db.jejucafedbcomment.find({}, {'_id': False}))
+    cafe_name_receive = request.args.get('cafe_name')
+    replies = list(db.jejucafedbcomment.find({"cafe": cafe_name_receive}, {'_id': False}))
 
     return jsonify({'all_replies':replies})
 
