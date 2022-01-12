@@ -1,10 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <module version="4">
+<<<<<<< HEAD
   <component name="NewModuleRootManager">
     <orderEntry type="jdk" jdkName="Python 3.8 (full_project)" jdkType="Python SDK" />
+=======
+  <component name="Flask">
+    <option name="enabled" value="true" />
+  </component>
+  <component name="NewModuleRootManager">
+    <orderEntry type="inheritedJdk" />
+>>>>>>> 10b6d5bf76187b698fc852a07d08aa7bcdf4069f
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Jinja2" />
+<<<<<<< HEAD
+=======
+    <option name="TEMPLATE_FOLDERS">
+      <list>
+        <option value="$MODULE_DIR$/templates" />
+      </list>
+    </option>
+>>>>>>> 10b6d5bf76187b698fc852a07d08aa7bcdf4069f
   </component>
 </module>
