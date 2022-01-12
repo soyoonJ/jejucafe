@@ -228,7 +228,18 @@
             })
         }
 
+<<<<<<< HEAD
         //카페 카드 이미지 클릭 시, 모달에서 작성한 코멘트 보여주기
+=======
+        function searchCafe() {
+            let cafe_name = $('#search-string').val()
+            if (cafe_name == "")
+                alert('검색할 카페 이름을 입력해주세요.')
+            else
+                window.location = '/api/search?cafe_name=' + cafe_name
+        }
+
+>>>>>>> 2c09f9c6cbf3a23c43ae7b9e5fd50adbf747c331
         function showComments(cafe_name) {
             $.ajax({
                 type: "GET",
@@ -392,10 +403,10 @@
             <div class="level-item">
                 <div class="field has-addons">
                     <p class="control">
-                        <input class="input" type="text" placeholder="Find a cafe">
+                        <input class="input is-rounded" id="search-string" type="text" placeholder="카페 이름 검색..">
                     </p>
                     <p class="control">
-                        <button class="button">
+                        <button class="button is-info is-rounded" onclick="searchCafe()">
                             Search
                         </button>
                     </p>
