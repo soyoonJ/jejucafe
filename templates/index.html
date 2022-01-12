@@ -192,7 +192,7 @@
                 url: "/api/comment",
                 data: {
                     cafe_name_give: cafe_name,
-                    nickname_give: `{{user_info['username']}}`,
+                    nickname_give: `{{user_info['nickname']}}`,
                     score_give: score,
                     comment_give: comment
                 },
@@ -299,7 +299,7 @@
             <img src="{{ url_for('static', filename='main_icon.png') }}">
     </div>
     <!-- 로그인 닉네임 따라 인사 -->
-    <div class="nav-middle">🍊 혼서옵서예 {{ user_info['username'] }}님 🍊</div>
+    <div class="nav-middle">🍊 혼저옵서예 {{ user_info['nickname'] }}님 🍊</div>
     <!-- 로그아웃 -->
     <div class="nav-right"><a onclick="sign_out()">로그아웃</a></div>
 </nav>
