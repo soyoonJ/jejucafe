@@ -1,20 +1,18 @@
 import time
 import random
 from pymongo import MongoClient
-# from pyvirtualdisplay import Display
 from bs4 import BeautifulSoup
 from selenium import webdriver
-# from selenium.webdriver.chrome.service import Service
 
 # 윈도우의 경우
 # client = MongoClient('localhost', 27017)
+#client = MongoClient('13.209.87.246', 27017, username="test", password="test")
 
 # Ubuntu의 경우
 client = MongoClient('mongodb://test:test@localhost', 27017)
 
 db = client.dbsparta
-headers = {
-    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
 
 # EC2 내 Ubuntu 에서 수행 시 Display가 없는 형태로 실행하되, 일반 Chrome 브라우저 인 것처럼 접근하도록 위장.
 chrome_options = webdriver.ChromeOptions()
@@ -72,9 +70,11 @@ for jeju_cafe_list in jeju_cafe_lists:
         cafe_soup = BeautifulSoup(cafe_html, 'html.parser')
         cafe_raw_url = cafe_soup.select_one('#content > div > div.sub_visual_wrap')
         if cafe_raw_url is not None:
-            # 제주시 > 망고홀릭 제주본점 과 같은 항목에 썸네일 URL 또는 제목이 없어 오류 발생 가능.
+            # 15 ~ 20초를 대기하였으나 썸네일을 불러오지 못했을 경우 오류 발생 가능.
+            # 또는 실제 스크래핑 해오는 사이트 내 카페 페이지에 데이터 값이 안들어있는 경우도 있었음.
             try:
                 cafe_modified_url = cafe_raw_url['style']
+                # style 태그 내 background: url 내용 중 주소만 스크래핑
                 cafe_thumbnail_url = cafe_modified_url.split('background: url("')[1].split('")')[0]
             except KeyError:
                 # KeyError 가 발생하는 경우는 실제로 지역의 카페 항목 내에 썸네일 URL 또는 제목이 없는 경우.
@@ -82,13 +82,14 @@ for jeju_cafe_list in jeju_cafe_lists:
         cafe_raw_name = cafe_soup.select_one(
             '#content > div > div.sub_visual_wrap > div.inner_wrap > div.sub_info_area > div.sub_info_title > h3')
         if cafe_raw_name is not None:
+            # \n (개행) 값이 들어있는 경우가 있어 제거 작업 진행
             cafe_name = cafe_raw_name.string.splitlines()[0]
         cafe_raw_address = cafe_soup.select_one('#content > div > div.sub_visual_wrap > div.inner_wrap > div.sub_info_area > div.basic_information > div:nth-child(2) > p.info_sub_cont')
         if cafe_raw_address is not None:
             cafe_address = cafe_raw_address.string
 
         cafe_id = cafe_id_area + cafe_id_num
-        # 지역 내 카페 정보가 잘 들어있는 경우, 데이터베이스에 이름이 같은 경우 Update, 또는 Insert.
+        # 지역 내 카페 정보가 잘 들어있는 경우, 데이터베이스에 이름이 같은 경우 Update, 또는 Create.
         if cafe_thumbnail_url != "NoThumbnailUrl":
             print('카페 ID: ', cafe_id)
             print('카페 이름: ', cafe_name)
@@ -96,14 +97,14 @@ for jeju_cafe_list in jeju_cafe_lists:
             print('카페 지역: ', cafe_area)
             print('카페 썸네일 주소: ', cafe_thumbnail_url)
 
-            # 이미 카페 이름이 등록된 경우
+            # 이미 카페 이름이 등록된 경우, Update 진행
             if db.jejucafedb.find_one({'cafe_name': cafe_name}) is not None:
                 time.sleep(5)
                 db.jejucafedb.update_many({'cafe_name': cafe_name},
                                           {'$set': {'cafe_address': cafe_address,
                                                     'cafe_thumbnail_url': cafe_thumbnail_url
                                                     }})
-            # 카페 이름이 Database 내에 없고, 최초 등록 시
+            # 카페 이름이 Database 내에 없고, 최초 등록 시 Create 진행
             else:
                 cafe_info = {
                     'cafe_id': cafe_id,
