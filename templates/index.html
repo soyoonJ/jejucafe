@@ -183,6 +183,7 @@
         <!-- 코멘트 추가하기 -->
         function post() {
             // 모달 내에서 '포스팅하기' 클릭 시 댓글, 점수, 작성한 카페 값 가져오기
+            // $('#modal-post').attr('cafe_name')을 가져올 수 있는 이유는 카드 클릭 시 값을 부여해주었기 때문.
             let cafe_name = $('#modal-post').attr('cafe_name');
             let score = $('#score-box').val()
             let comment = $('#comment-box').val()
@@ -237,6 +238,7 @@
         }
 
         //카페 카드 이미지 클릭 시, 모달에서 작성한 코멘트 보여주기
+        // 하단에서 onclick = showComments('{{cafe.cafe_name}}')을 통해 cafe_name에 들어갈 값 받아온 후 함수 내에서 대입
         function showComments(cafe_name) {
             $.ajax({
                 type: "GET",
@@ -456,11 +458,14 @@
 
 
 <div class="modal" id="modal-post">
+    <!-- 백그라운드 클릭 시 is-active 클래스 삭제 - 창 닫힘 -->
     <div class="modal-background" onclick='$("#modal-post").removeClass("is-active")'></div>
+    <!-- 모달에 들어갈 컨텐츠 -->
     <div class="modal-content">
         <div class="box">
             <article class="media">
                 <div class="media-content">
+                    <!-- 작성된 코멘트 / 코멘트 박스 / 별점 포함 -->
                     <div class="field">
                         <p class="control">
                         <table class="table table-hover">
@@ -490,6 +495,7 @@
                             </tbody>
                         </table>
                         <!-- score 드롭박스 만들어서 코멘트 저장 시 값을 같이 저장할 수 있도록 함 -->
+                        <!-- 숫자값 대신 별 이모지로 삽입. 데이터에도 문자로 들어가고 노출도 정상 작동 -->
                         <div class="btn-group">
                             <select class="custom-select my-1 mr-sm-2" id="score-box">
                                 <option selected>SCORE</option>
@@ -506,10 +512,11 @@
                     </div>
                     <nav class="level is-mobile">
                         <div class="level-left">
-
                         </div>
+                        <!-- 우측에 들어갈 버튼 포함 -->
                         <div class="level-right">
                             <div class="level-item">
+                                <!-- 포스팅하기 버튼 클릭 시 코멘트 저장하는 함수인 post()로 넘어가도록 설정 -->
                                 <a class="button is-sparta" onclick="post()">포스팅하기</a>
                             </div>
                             <div class="level-item">
@@ -522,6 +529,7 @@
             </article>
         </div>
     </div>
+    <!-- X 표시 클릭 시 is-active 클래스 삭제 - 창 닫힘 -->
     <button class="modal-close is-large" aria-label="close"
             onclick='$("#modal-post").removeClass("is-active")'></button>
 </div>

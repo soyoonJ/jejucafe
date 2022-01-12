@@ -161,14 +161,17 @@ def search_cafe_list():
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
 
-@app.route('/api/open', methods=['GET'])
-def show_stars():
-    cafe = list(db.jejucafedb.find({}, {'_id': False}))
-    return jsonify({'all_cafe': cafe})
+# 모달 개별화 시도하고자 작성했던 코드
+# @app.route('/api/open', methods=['GET'])
+# def show_stars():
+#     cafe = list(db.jejucafedb.find({}, {'_id': False}))
+#     return jsonify({'all_cafe': cafe})
 
 
+#
 @app.route('/api/comment', methods=['POST'])
 def write_review():
+    # 작성한 코멘트 저장하기 위해 index.html에서 '_give' 변수로 받아와서 doc 생성 후 db에 추가
     cafe_name_receive = request.form['cafe_name_give']
     nickname_receive = request.form['nickname_give']
     score_receive = request.form['score_give']
