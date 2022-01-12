@@ -13,6 +13,7 @@
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
             integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
             crossorigin="anonymous"></script>
@@ -136,8 +137,8 @@
     </style>
     <script>
         $(document).ready(function () {
-                // showComments();
-            });
+            // showComments();
+        });
 
         function post() {
             let cafe_name = $('#modal-post').attr('cafe_name');
@@ -182,12 +183,11 @@
         }
 
 
-
         function showComments(cafe_name) {
             $.ajax({
                 type: "GET",
                 url: "/api/read",
-                data: { "cafe_name": cafe_name },
+                data: {"cafe_name": cafe_name},
                 success: function (response) {
                     $('#saved_comments').empty()
                     let lists = response['all_replies']
@@ -197,7 +197,7 @@
                         let comment = lists[i]['comment']
 
                         let temp_html = `<tr>
-                                            <th scope="row">${i+1}</th>
+                                            <th scope="row">${i + 1}</th>
                                             <td>${nickname}</td>
                                             <td>${score}</td>
                                             <td>${comment}</td>
@@ -239,6 +239,12 @@
             });
         }
 
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃!')
+            window.location.href = "/"
+        }
+
 
     </script>
 </head>
@@ -253,7 +259,7 @@
                     style="font-family: 'Stylish', sans-serif;font-size: larger;">Home</strong>
         </a>
     </div>
-    <div class="nav-right"><a href="/api/login">로그아웃</a></div>
+    <div class="nav-right"><a onclick="sign_out()">로그아웃</a></div>
 </nav>
 
 <!--hero banner-->
