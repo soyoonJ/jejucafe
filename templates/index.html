@@ -331,21 +331,29 @@
     <nav class="level search-margin">
         <!-- Left side (빈공간) -->
         <div class="level-left">
-            <button onclick="window.location.href='/api/mycafe'">내가 찜한 카페 보기</button>
+            <button class="button is-link is-rounded" onclick="window.location.href='/api/mycafe'">
+                <span class="icon is-small">
+                    <i class="fas fa-coffee"></i>
+                </span>
+                <span>내가 찜한 카페 보기</span>
+            </button>
         </div>
 
         <!-- Right side -->
         <div class="level-right">
-            <div class="level-item">
-                <div style="display: inline-block">
+            <div class="control has-icons-left level-item">
+                <div class="select is-rounded is-link" style="display: inline-block">
                     <select name="area" onchange="change_url(this.value);">
-                        <option value="" selected="selected">-지역선택-</option>
-                        <option value="지역전체">지역전체</option>
+                        <option selected>지역</option>
+                        <option value="지역전체">전체보기</option>
                         <option value="제주시">제주시</option>
                         <option value="성산읍">제주동부</option>
                         <option value="서귀포시">서귀포</option>
                         <option value="애월읍">제주서부</option>
                     </select>
+                </div>
+                <div class="icon is-small is-left">
+                     <i class="fas fa-map-marker-alt"></i>
                 </div>
             </div>
             <div class="level-item">
