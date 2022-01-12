@@ -149,14 +149,24 @@
 
         .like-button {
             position: absolute;
+            color: black;
+            right: 10px;
+            z-index: 2;
+        }
+
+        .like-button-1 {
+            position: absolute;
             color: red;
-            right: 0;
+            right: 10px;
             z-index: 2;
         }
 
         .card:hover {
             opacity: 1;
             transform: scale(1.05);
+        }
+
+        .card-img-top {
             cursor: pointer;
         }
 
@@ -384,19 +394,20 @@
 
         <!--        <div class="card" onclick='$("#modal-post").addClass("is-active")'>-->
         <div class="card" id="selected-card">
-            <div href="#" class="like-button" onclick="like_post('{{cafe.cafe_name}}')">
-                {% if cafe.cafe_name in user_info.like%}
-                <i class="fas fa-heart"></i>
-                {% else %}
-                <i class="far fa-heart"></i>
-                {% endif %}
-            </div>
+
             <!-- id값 #modal-post 에 cafe_name 이라는 임의의 속성값을 각 카드에 심어두고,
                 카드를 선택하여 modal 이 열릴 때 해당 속성값으로 cafe_name 을 가져온다. -->
-            <div onclick='$("#modal-post").addClass("is-active").attr("cafe_name", "{{cafe.cafe_name}}"); showComments("{{cafe.cafe_name}}")'>
+            <div >
                 <img class="card-img-top" src="{{ cafe.cafe_thumbnail_url }}"
-                     alt="Card image cap">
+                     alt="Card image cap" onclick='showComments("{{cafe.cafe_name}}"); $("#modal-post").addClass("is-active").attr("cafe_name","{{cafe.cafe_name}}");'>
                 <div class="card-body card-address-align">
+                    <div href="#" class="like-button" onclick="like_post('{{ cafe.cafe_name }}') ">
+                        {% if cafe.cafe_name in user_info.like %}
+                            <i class="fas fa-heart fa-lg like-button-1"></i>
+                        {% else %}
+                            <i class="far fa-heart fa-lg"></i>
+                        {% endif %}
+                    </div>
                     <h5 class="card-title" id="card-selected"><b>{{ cafe.cafe_name }}</b></h5>
                     <p class="card-text">{{ cafe.cafe_address }}</p>
                 </div>
