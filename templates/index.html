@@ -59,7 +59,6 @@
 
         }
 
-
         body, html {
             height: 100%;
         }
@@ -95,14 +94,16 @@
             display: none;
             width: 500px;
             margin: auto;
-            border-style: solid;
+            border: 1px solid #adb3ba;
             border-radius: 10px;
-            padding: 30px 50px 50px 30px;
+            padding: 30px 40px 30px 40px;
             margin-top: 50px;
         }
 
         .btn_newcafe {
-            margin-top: 10px;
+            width: 100px;
+            display: block;
+            margin: 30px auto 0px auto;
         }
 
 
@@ -282,7 +283,7 @@
             <img src="">이미지
     </div>
     <!-- 로그인 닉네임 따라 인사 -->
-    <div class="nav-middle">혼서옵서예 {{ user_info['username'] }}님</div>
+    <div class="nav-middle">🍊 혼서옵서예 {{ user_info['username'] }}님 🍊</div>
     <!-- 로그아웃 -->
     <div class="nav-right"><a onclick="sign_out()">로그아웃</a></div>
 </nav>
@@ -320,7 +321,7 @@
         <input type="text" class="form-control" id="New-address" aria-describedby="emailHelp"
                placeholder="ex) 제주시 공항로 2">
     </div>
-    <button type="button" class="btn_newcafe" onclick="Add_newcafe()">추가</button>
+    <button type="button" class="btn_newcafe btn btn-dark" onclick="Add_newcafe()">카페추가</button>
 </form>
 
 <!--카드내용-->
