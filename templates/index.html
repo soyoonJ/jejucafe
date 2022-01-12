@@ -44,15 +44,16 @@
             font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
 
         }
+
+        /*네비게이션 바 같은 라인에 위치하도록 설정 + 볼드처리*/
         .nav-align {
-            text-align: center;
             line-height: 50px;
             font-weight: bold;
         }
 
+        /*left,middle,right로 네비게이션 바 왼쪽,중간,오른쪽 설정*/
         .nav-left {
             float: inline-start;
-            size: 30px;
         }
         .nav-middle {
             font-size: 20px;
@@ -60,7 +61,6 @@
 
         .nav-right {
             float: inline-end;
-
         }
 
         body, html {
@@ -68,7 +68,9 @@
         }
 
         /* The hero image */
+        /* background-size: cover로 이미지 잘리지 않는 선에서 꽉 채움 */
         .hero-image {
+            /*linear-gradient로 배경에 반투명한 컬러 덮기*/
             background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("http://localguide.co.kr/wp-content/uploads/2020/07/20200110-g100-0761-1-e1597759075396-2048x732.jpeg");
             height: 50%;
             background-position: center;
@@ -178,11 +180,9 @@
 
     </style>
     <script>
-        $(document).ready(function () {
-            // showComments();
-        });
-
+        <!-- 코멘트 추가하기 -->
         function post() {
+            // 모달 내에서 '포스팅하기' 클릭 시 댓글, 점수, 작성한 카페 값 가져오기
             let cafe_name = $('#modal-post').attr('cafe_name');
             let score = $('#score-box').val()
             let comment = $('#comment-box').val()
@@ -192,6 +192,8 @@
                 url: "/api/comment",
                 data: {
                     cafe_name_give: cafe_name,
+                    //jinja2 언어 활용해서 현재 접속한 사용자의 nickname 가져오기
+                    //user_info는 app.py 내 def home()에 지정되어 있음.
                     nickname_give: `{{user_info['nickname']}}`,
                     score_give: score,
                     comment_give: comment
@@ -226,20 +228,23 @@
             })
         }
 
-
+        //카페 카드 이미지 클릭 시, 모달에서 작성한 코멘트 보여주기
         function showComments(cafe_name) {
             $.ajax({
                 type: "GET",
                 url: "/api/read",
                 data: {"cafe_name": cafe_name},
                 success: function (response) {
+                    // 함수 실행될 때마다 똑같은 코멘트가 계속 붙여지기 때문에 한번 empty 실행 후 진행
                     $('#saved_comments').empty()
+                    // app.py에서 선택된 카페의 정보를 불러오기
                     let lists = response['all_replies']
+                    // 코멘트 노출에 필요한 nickname, score, comment 값 지정해주기
                     for (let i = 0; i < lists.length; i++) {
                         let nickname = lists[i]['nickname']
                         let score = lists[i]['score']
                         let comment = lists[i]['comment']
-
+                        //등록된 코멘트 html 가져와서 innerText부분 바꿔주기
                         let temp_html = `<tr>
                                             <th scope="row">${i + 1}</th>
                                             <td>${nickname}</td>
@@ -247,6 +252,7 @@
                                             <td>${comment}</td>
                                         </tr>`
                         console.log(temp_html)
+                        //temp_html 코멘트 노출되는 부분의 id 찾아, 밑에 붙여넣어주기
                         $('#saved_comments').append(temp_html)
                     }
                 }
@@ -296,7 +302,7 @@
 
 <!--네비게이션 바-->
 <nav class="navbar is-fixed-top is-white nav-align" role="navigation" aria-label="main navigation">
-    <!-- 네비게이션 아이콘 위치 -->
+    <!-- 네비게이션 좌측 돌하르방 이미지 위치 알려주기 -->
     <div class="nav-left">
             <img src="{{ url_for('static', filename='main_icon.png') }}">
     </div>
@@ -306,8 +312,9 @@
     <div class="nav-right"><a onclick="sign_out()">로그아웃</a></div>
 </nav>
 
-<!--hero banner-->
+<!--hero banner / 이미지 넣기 위해 class값 지정 -->
 <div class="hero-image">
+    <!-- hero banner 안에 들어갈 텍스트/버튼 추가 -->
     <div class="hero-text">
         <h1 class="main-text">돌하르방의 티타임</h1><br>
         <p>신규 카페를 추가해보세요</p><br>
@@ -318,6 +325,7 @@
 
 
 <!--신규카페 포스팅 박스-->
+<!--카페명/이미지url/지역/상세주소 input박스 삽입-->
 <form class="new-cafebox" id="post-box">
     <div class="form-group">
         <label>카페명</label>
@@ -328,6 +336,7 @@
         <input type="text" class="form-control" id="Img-url" aria-describedby="emailHelp" placeholder="">
     </div>
     <div>
+        <!-- select/option 활용한 지역선택 드롭박스 추가 -->
         <label class="my-1 mr-2" for="inlineFormCustomSelectPref">지역</label>
         <select class="custom-select my-1 mr-sm-2" id="New-Area">
             <option selected value="">지역선택</option>
@@ -340,6 +349,7 @@
     <br>
     <div class="form-group">
         <label for="exampleInputEmail1">세부주소</label>
+        <!-- placeholder에 상세주소 작성 예시 넣어, 사용자가 자세한 주소 입력할 수 있도록 유도 -->
         <input type="text" class="form-control" id="New-address" aria-describedby="emailHelp"
                placeholder="ex) 제주시 공항로 2">
     </div>
@@ -347,6 +357,7 @@
 </form>
 
 <!--카드내용-->
+<!-- 페이지 내 카드 정렬을 위해 전체 카드 묶어주는 div 생성 및 class 지정 -->
 <div class="cards-wrap">
 
     <!--하단 바-->
