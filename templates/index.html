@@ -228,9 +228,6 @@
             })
         }
 
-<<<<<<< HEAD
-        //카페 카드 이미지 클릭 시, 모달에서 작성한 코멘트 보여주기
-=======
         function searchCafe() {
             let cafe_name = $('#search-string').val()
             if (cafe_name == "")
@@ -239,7 +236,7 @@
                 window.location = '/api/search?cafe_name=' + cafe_name
         }
 
->>>>>>> 2c09f9c6cbf3a23c43ae7b9e5fd50adbf747c331
+        //카페 카드 이미지 클릭 시, 모달에서 작성한 코멘트 보여주기
         function showComments(cafe_name) {
             $.ajax({
                 type: "GET",
@@ -468,6 +465,7 @@
                         <p class="control">
                         <table class="table table-hover">
                             <thead>
+                            <!-- 코멘트 테이블 헤드 텍스트 -->
                             <tr>
                                 <th scope="col"></th>
                                 <th scope="col">닉네임</th>
@@ -475,6 +473,7 @@
                                 <th scope="col">코멘트</th>
                             </tr>
                             </thead>
+                            <!-- id를 지정하고 showComments 함수에 temp_html로 붙여넣어, 사용자가 작성한 코멘트가 tbody 하단으로 들어감 -->
                             <tbody id="saved_comments">
                             <tr>
                                 <th scope="row">1</th>
@@ -490,14 +489,15 @@
                             </tr>
                             </tbody>
                         </table>
+                        <!-- score 드롭박스 만들어서 코멘트 저장 시 값을 같이 저장할 수 있도록 함 -->
                         <div class="btn-group">
                             <select class="custom-select my-1 mr-sm-2" id="score-box">
                                 <option selected>SCORE</option>
-                                <option value="5">5</option>
-                                <option value="4">4</option>
-                                <option value="3">3</option>
-                                <option value="2">2</option>
-                                <option value="1">1</option>
+                                <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
+                                <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
+                                <option value="⭐⭐⭐">⭐⭐⭐</option>
+                                <option value="⭐⭐">⭐⭐</option>
+                                <option value="⭐">⭐</option>
                             </select>
                         </div>
 
