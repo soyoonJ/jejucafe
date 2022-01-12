@@ -226,6 +226,13 @@
             })
         }
 
+        function searchCafe() {
+            let cafe_name = $('#search-string').val()
+            if (cafe_name == "")
+                alert('검색할 카페 이름을 입력해주세요.')
+            else
+                window.location = '/api/search?cafe_name=' + cafe_name
+        }
 
         function showComments(cafe_name) {
             $.ajax({
@@ -381,10 +388,10 @@
             <div class="level-item">
                 <div class="field has-addons">
                     <p class="control">
-                        <input class="input" type="text" placeholder="Find a cafe">
+                        <input class="input is-rounded" id="search-string" type="text" placeholder="카페 이름 검색..">
                     </p>
                     <p class="control">
-                        <button class="button">
+                        <button class="button is-info is-rounded" onclick="searchCafe()">
                             Search
                         </button>
                     </p>

@@ -7,6 +7,7 @@ import hashlib
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 import requests
+import re
 
 from pymongo import MongoClient
 
@@ -128,6 +129,31 @@ def show_mycafe_lists():
         for cafe_like in cafe_like_list:
             cafe_lists.append(cafe_like_list[like_number]['like_cafe_list'][0])
             like_number = like_number + 1
+        return render_template('index.html', user_info=user_info, cafe_lists=cafe_lists)
+    except jwt.ExpiredSignatureError:
+        return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    except jwt.exceptions.DecodeError:
+        return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
+
+
+@app.route('/api/search', methods=['GET'])
+def search_cafe_list():
+    # DB에서 저장된 카페 목록 찾아서 HTML에 나타내기
+    cafe_name = request.args.get('cafe_name')
+    token_receive = request.cookies.get('mytoken')
+    try:
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        user_info = db.users.find_one({"username": payload["id"]})
+
+        # LIKE 검색을 위해 정규식 표현 사용. "카페" 가 포함된 모든 단어 검색.
+        # 예) '카페' 검색 시, "카페 도두", "무인카페 산책", "비밀의숲 카페" 모두 검색됨.
+        # MongoDB : db.jejucafedb.find({"cafe_name" : /cafe_name/})
+        # RDBMS 형식 : SELECT * FROM jejucafedb WHERE name LIKE %cafe_name% 검색과 동일
+        # 참고1 ) https://stackoverflow.com/questions/3305561/how-to-query-mongodb-with-like
+        # 참고2 ) https://stackoverflow.com/questions/19867389/pymongo-in-regex
+
+        cafe_lists = list(db.jejucafedb.find({"cafe_name": re.compile('.*' + cafe_name + '.*')}, {"_id": False}))
+
         return render_template('index.html', user_info=user_info, cafe_lists=cafe_lists)
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
