@@ -17,79 +17,110 @@ client = MongoClient('13.209.87.246', 27017, username="test", password="test")
 db = client.dbsparta
 
 SECRET_KEY = 'JEJU'
-app.secret_key = "JEJU"
 
-## HTML을 주는 부분
+# 첫 페이지 HTML 렌더링 및 로그인 확인
 @app.route('/')
 def home():
     token_receive = request.cookies.get('mytoken')
     try:
+        # 로그인된 jwt 토큰을 받아 디코드하여 payload 저장
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+
+        # payload 내 ID 정보로 user_info 저장
         user_info = db.users.find_one({"username": payload["id"]})
+
+        # db 내 전체 cafe_list 불러오기
         cafe_lists = list(db.jejucafedb.find({}, {"_id": False}))
+
+        # index.html 렌더링 및 user_info, cafe_lists 웹으로 전달달
         return render_template('index.html', user_info=user_info, cafe_lists=cafe_lists)
+
+    # jwt 토큰 유효기간 만료 시 msg 전달 및 login.html 페이지로 이동
     except jwt.ExpiredSignatureError:
         return redirect(url_for("login", msg="로그인 시간이 만료되었습니다."))
+    # jwt 토큰 decode Error 발생 시 (로그인 정보가 없을때) msg 전달 및 login.html 페이지로 이동
     except jwt.exceptions.DecodeError:
         return redirect(url_for("login", msg="로그인 정보가 존재하지 않습니다."))
 
 
+# 로그인 페이지 HTML 렌더링
 @app.route('/login')
 def login():
-    msg = request.args.get("msg")
-    return render_template('login.html', msg=msg)
+    return render_template('login.html')
 
 
+# 로그인 API
 @app.route('/api/login', methods=['POST'])
 def sign_in():
+    # username, password 값 받아오기
     username_receive = request.form['username_give']
     password_receive = request.form['password_give']
 
+    # 받아온 password 값을 hashlib 모듈 이용하여 sha256 문자열 방식으로 해싱하여 16진수로 변환
     pw_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
+
+    # username , 해싱된 pw 값 대조
     result = db.users.find_one({'username': username_receive, 'password': pw_hash})
 
+    # result 값 있을때
     if result is not None:
+        # payload 내 id, 유효기간 지정
         payload = {
             'id': username_receive,
             'exp': datetime.utcnow() + timedelta(seconds=60 * 60 * 24)
         }
+        # 상기 payload 사용하여 jwt 인코딩
         token = jwt.encode(payload, SECRET_KEY, algorithm='HS256')
-
+        # token 으로 html로 전송
         return jsonify({'result': 'success', 'token': token})
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 
+# 회원가입 API
 @app.route('/api/signup', methods=['POST'])
 def sign_up():
+    # username, password, nickname 값 받아오기
     username_receive = request.form['username_give']
     password_receive = request.form['password_give']
     nickname_receive = request.form['nickname_give']
-    like = []
+
+    # 받아온 password 값을 hashlib 모듈 이용하여 sha256 문자열 방식으로 해싱하여 16진수로 변환
     password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
+
+    # db 상 username, password, nickname, like(찜 기능) 항목으로 저장
     doc = {
         "username": username_receive,
         "password": password_hash,
         "nickname": nickname_receive,
-        "like": like
+        "like": []
     }
+
     db.users.insert_one(doc)
+
     return jsonify({'result': 'success'})
 
 
+# ID 중복확인 API
 @app.route('/api/check_id', methods=['POST'])
 def check_id():
+    # username 받아오기
     username_receive = request.form['username_give']
+
+    # 받아온 username 이 db상 있는지 확인.
     exists = bool(db.users.find_one({"username": username_receive}))
-    # print(value_receive, type_receive, exists)
     return jsonify({'result': 'success', 'exists': exists})
 
 
+# 닉네임 중복확인 API
 @app.route('/api/check_nickname', methods=['POST'])
 def check_nickname():
+    # nickname 받아오기
     nickname_receive = request.form['nickname_give']
+
+    # 받아온 nickname 이 db상 있는지 확인.
     exists = bool(db.users.find_one({"nickname": nickname_receive}))
-    # print(value_receive, type_receive, exists)
+
     return jsonify({'result': 'success', 'exists': exists})
 
 
@@ -101,7 +132,7 @@ def show_cafe_lists():
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         user_info = db.users.find_one({"username": payload["id"]})
-        # area값이 포함되어 접근했을 경우
+        # area 값이 포함되어 접근했을 경우
         if cafe_area in ["제주시", "서귀포시", "성산읍", "애월읍"]:
             cafe_lists = list(db.jejucafedb.find({"cafe_area": cafe_area}, {"_id": False}))
         else:

@@ -417,15 +417,10 @@
 
 
     <!--카드-->
-    <!--빈하트 <i class="fa fa-heart-o" aria-hidden="true"></i>-->
-    <!--색칠된하트<i class="fa fa-heart" aria-hidden="true"></i>-->
 
     <div class="card-columns">
-
         {# jinja2 카드 내용 불러오기 #}
         {% for cafe in cafe_lists %}
-
-        <!--        <div class="card" onclick='$("#modal-post").addClass("is-active")'>-->
         <div class="card" id="selected-card">
 
             <!-- id값 #modal-post 에 cafe_name 이라는 임의의 속성값을 각 카드에 심어두고,

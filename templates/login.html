@@ -67,21 +67,25 @@
     </style>
 
     <script>
+        // ID 정규 표현식으로 양식 검사
         function is_id(asValue) {
             var regExp = /^(?=.*[a-zA-Z])[-a-zA-Z0-9_.]{2,10}$/;
             return regExp.test(asValue);
         }
 
+        // 닉네임 정규표현식으로 양식 검사
         function is_nickname(asValue) {
             var regExp = /^[ㄱ-ㅎ|가-힣|a-z|A-Z|0-9|]+$/;
             return regExp.test(asValue);
         }
 
+        // 비밀번호 정규표현식으로 양식 검사
         function is_password(asValue) {
             var regExp = /^(?=.*\d)(?=.*[a-zA-Z])[0-9a-zA-Z!@#$%^&*]{8,20}$/;
             return regExp.test(asValue);
         }
 
+        // 회원가입 버튼 클릭 시 변경
         function toggle_sign_up() {
             $("#sign_up_text").toggleClass("is-hidden")
             $("#check_dup_btn").toggleClass("is-hidden")
@@ -91,18 +95,24 @@
             $("#login_wrap").toggleClass("is-hidden")
         }
 
+        // 아이디 중복 확인
         function check_dup() {
             let username = $("#input-username").val()
+            // 입력값이 없을때
             if (username == "") {
                 $("#help-id").text("아이디를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
                 $("#input-username").focus()
                 return;
             }
+
+            // 양식에 벗어났을때
             if (!is_id(username)) {
                 $("#help-id").text("아이디의 형식을 확인해주세요. 영문과 숫자, 일부 특수문자(._-) 사용 가능. 2-10자 길이").removeClass("is-safe").addClass("is-danger")
                 $("#input-username").focus()
                 return;
             }
+
+            // 둘다 맞을때 서버로 전송
             $("#help-id").addClass("is-loading")
             $.ajax({
                 type: "POST",
@@ -123,19 +133,23 @@
                 }
             });
         }
-
+        // 닉네임 중복확인
         function check_dup_nick() {
             let username = $("#input-nickname").val()
+            // 입력값 없을때
             if (username == "") {
                 $("#help-nickname").text("닉네임을 입력해주세요.").removeClass("is-safe").addClass("is-danger")
                 $("#input-nickname").focus()
                 return;
             }
+            // 입력값이 양식에 준하지 않을때
             if (!is_nickname(username)) {
                 $("#help-nickname").text("닉네임의 형식을 확인해주세요. 한글,영문,숫자의 조합만 사용 가능합니다.").removeClass("is-safe").addClass("is-danger")
                 $("#input-nickname").focus()
                 return;
             }
+
+            // 서버로 전송하여 대조
             $("#help-id").addClass("is-loading")
             $.ajax({
                 type: "POST",
@@ -156,7 +170,7 @@
                 }
             });
         }
-
+        // 회원가입
         function sign_up() {
             let username = $("#input-username").val()
             let password = $("#input-password").val()
@@ -164,7 +178,7 @@
             let nickname = $("#input-nickname").val()
             console.log(username, password, password2)
 
-
+            // ID 중복확인 여부, 적합성 여부 확인
             if ($("#help-id").hasClass("is-danger")) {
                 alert("아이디를 다시 확인해주세요.")
                 return;
@@ -172,7 +186,7 @@
                 alert("아이디 중복확인을 해주세요.")
                 return;
             }
-
+            // 비밀번호 입력칸이 비었을때
             if (password == "") {
                 $("#help-password").text("비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
                 $("#input-password").focus()
@@ -181,6 +195,7 @@
                 $("#help-password").text("비밀번호의 형식을 확인해주세요. 영문과 숫자 필수 포함, 특수문자(!@#$%^&*) 사용가능 8-20자").removeClass("is-safe").addClass("is-danger")
                 $("#input-password").focus()
                 return
+            //    양식에서 벗어났을때
             } else {
                 $("#help-password").text("사용할 수 있는 비밀번호입니다.").removeClass("is-danger").addClass("is-success")
             }
@@ -211,7 +226,7 @@
             });
 
         }
-
+        // 회원가입
         function sign_in() {
             let username = $("#input-username").val()
             let password = $("#input-password").val()
@@ -254,11 +269,14 @@
 
 </head>
 <body>
+<!-- 전체 wrap-->
 <div class="wrap">
+    <!--  title 이미지 및 grid 나누기용 section  -->
     <section class="first">
         <div class="title_img">
         </div>
     </section>
+    <!--  로그인 박스  -->
     <section class="section">
         <div class="container">
             <h1 class="title">돌하르방의 티타임</h1>
