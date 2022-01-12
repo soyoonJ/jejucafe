@@ -258,18 +258,19 @@ def like():
 
 @app.route('/api/create', methods=['POST'])
 def Add_newcafe():
+    # 클라이언트로 부터 받은 내용 변수에 저장
     cafename_receive = request.form['CafeName_give']
     cafearea_receive = request.form['CafeArea_give']
     cafeaddress_receive = request.form['CafeAddress_give']
     cafeimgurl_receive = request.form['CafeImgurl_give']
-
+    # Doc 생성
     doc = {
         "cafe_name": cafename_receive,
         "cafe_area": cafearea_receive,
         "cafe_address": cafeaddress_receive,
         "cafe_thumbnail_url": cafeimgurl_receive
     }
-
+    #jejucafedb에 추가.
     db.jejucafedb.insert_one(doc)
     return jsonify({'result': 'success', 'msg': '카페가 추가되었습니다.'})
 
