@@ -208,6 +208,7 @@
             let name = $('#New-name').val()
             let Area = $('#New-Area').val()
             let Address = $('#New-address').val()
+            let Imgurl = $('#Img-url').val()
 
             $.ajax({
                 type: "POST",
@@ -215,7 +216,8 @@
                 data: {
                     CafeName_give: name,
                     CafeArea_give: Area,
-                    CafeAddress_give: Address
+                    CafeAddress_give: Address,
+                    CafeImgurl_give : Imgurl
                 },
                 success: function (response) {
                     alert(response["msg"])
@@ -323,7 +325,7 @@
     </div>
     <div class="form-group">
         <label>이미지url</label>
-        <input type="text" class="form-control" id="New-name" aria-describedby="emailHelp" placeholder="">
+        <input type="text" class="form-control" id="Img-url" aria-describedby="emailHelp" placeholder="">
     </div>
     <div>
         <label class="my-1 mr-2" for="inlineFormCustomSelectPref">지역</label>

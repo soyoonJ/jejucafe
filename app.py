@@ -201,14 +201,16 @@ def Add_newcafe():
     cafename_receive = request.form['CafeName_give']
     cafearea_receive = request.form['CafeArea_give']
     cafeaddress_receive = request.form['CafeAddress_give']
+    cafeimgurl_receive = request.form['CafeImgurl_give']
 
     doc = {
         "cafe_name": cafename_receive,
         "cafe_area": cafearea_receive,
         "cafe_address": cafeaddress_receive,
+        "cafe_thumbnail_url": cafeimgurl_receive
     }
 
-    db.Newcafe.insert_one(doc)
+    db.jejucafedb.insert_one(doc)
     return jsonify({'result': 'success', 'msg': '카페가 추가되었습니다.'})
 
 
