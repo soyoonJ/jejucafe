@@ -26,6 +26,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Dokdo&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css"
           href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
+    <script src="https://kit.fontawesome.com/23b05056a7.js" crossorigin="anonymous"></script>
 
     <title>돌하르방의 티타임 회원가입</title>
 
@@ -51,7 +52,7 @@
 
         .title_img {
             /*background-image: url("http://www.kogl.or.kr/upload_recommend/%ED%8A%B9%EB%B3%84%20%ED%85%8C%EB%A7%88%EC%A0%84/%EC%8B%9D%EC%9E%AC%EB%A3%8C%CB%99%EC%9D%8C%EC%8B%9D/%EC%95%84%EA%B7%B8%EB%9D%BC%ED%91%B8%EB%93%9C/aT_%EC%95%84%EA%B7%B8%EB%9D%BC%ED%91%B8%EB%93%9C_0232_%EB%8F%8C%ED%95%98%EB%A5%B4%EB%B0%A9.jpg");*/
-            background-image: url('../static/stone_grandfather.jpg');
+            background-image: url('../static/stone_grandfather2.png');
             background-size: cover;
             height: 100vh;
         }
@@ -268,7 +269,7 @@
                             <div class="field has-addons">
                                 <div class="control has-icons-left" style="width:100%">
                                     <input id="input-username" class="input" type="text" placeholder="아이디">
-                                    <span class="icon is-small is-left"><i class="fa fa-user"></i></span>
+                                    <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
                                 </div>
                                 <div id="check_dup_btn" class="control is-hidden">
                                     <button class="button" onclick="check_dup()">중복확인</button>
@@ -281,7 +282,7 @@
                             <div class="field">
                                 <div class="control has-icons-left">
                                     <input id="input-password" class="input" type="password" placeholder="비밀번호">
-                                    <span class="icon is-small is-left"><i class="fa fa-lock"></i></span>
+                                    <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
                                 </div>
                                 <p id="help-password" class="help is-hidden">영문과 숫자 조합의 8-20자의 비밀번호를 설정해주세요.
                                     특수문자(!@#$%^&*)도 사용
@@ -292,7 +293,7 @@
                         </div>
                         <div id="login_wrap" class="has-text-centered">
                             <nav class="level is-mobile">
-                                <button class="level-item button is-wwg" onclick="sign_in()">
+                                <button class="level-item button" onclick="sign_in()">
                                     로그인
                                 </button>
 
@@ -301,7 +302,7 @@
                             <h4 class="mb-3">아직 회원이 아니라면</h4>
                             <nav class="level is-mobile">
 
-                                <button class="level-item button is-wwg is-outlined"
+                                <button class="level-item button is-outlined"
                                         onclick="toggle_sign_up()">
                                     회원가입하기
                                 </button>
@@ -314,14 +315,14 @@
                                     <div class="control has-icons-left" style="width:100%">
                                         <input id="input-pwd2" class="input" type="password"
                                                placeholder="비밀번호 재입력">
-                                        <span class="icon is-small is-left"><i class="fa fa-lock"></i></span>
+                                        <span class="icon is-small is-left"><i class="fas fa-lock"></i></span>
                                     </div>
                                     <p id="help-password2" class="help">비밀번호를 다시 한 번 입력해주세요.</p>
                                 </div>
                                 <div class="field has-addons">
                                     <div class="control has-icons-left" style="width:100%">
                                         <input id="input-nickname" class="input" type="text" placeholder="닉네임">
-                                        <span class="icon is-small is-left"><i class="fa fa-user"></i></span>
+                                        <span class="icon is-small is-left"><i class="fas fa-user"></i></span>
                                     </div>
                                     <div id="check_dup_btn_nick" class="control">
                                         <button class="button" onclick="check_dup_nick()">중복확인</button>
@@ -331,10 +332,10 @@
                                 <p id="help-nickname" class="help">닉네임을 입력해주세요.</p>
                             </div>
                             <nav class="level is-mobile">
-                                <button class="level-item button is-wwg" onclick="sign_up()">
+                                <button class="level-item button" onclick="sign_up()">
                                     회원가입
                                 </button>
-                                <button class="level-item button is-wwg is-outlined" onclick="toggle_sign_up()">
+                                <button class="level-item button is-outlined" onclick="toggle_sign_up()">
                                     취소
                                 </button>
                             </nav>
