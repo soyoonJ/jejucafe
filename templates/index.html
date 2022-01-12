@@ -49,6 +49,7 @@
 
         .nav-left {
             float: inline-start;
+            size: 30px;
         }
         .nav-middle {
             font-size: 20px;
@@ -152,6 +153,7 @@
             color: black;
             right: 10px;
             z-index: 2;
+            cursor: pointer;
         }
 
         .like-button-1 {
@@ -159,6 +161,7 @@
             color: red;
             right: 10px;
             z-index: 2;
+            cursor: pointer;
         }
 
         .card:hover {
@@ -290,7 +293,7 @@
 <nav class="navbar is-fixed-top is-white nav-align" role="navigation" aria-label="main navigation">
     <!-- 네비게이션 아이콘 위치 -->
     <div class="nav-left">
-            <img src="">이미지
+            <img src="{{ url_for('static', filename='main_icon.png') }}">
     </div>
     <!-- 로그인 닉네임 따라 인사 -->
     <div class="nav-middle">🍊 혼서옵서예 {{ user_info['username'] }}님 🍊</div>
