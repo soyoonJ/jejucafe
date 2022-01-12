@@ -41,15 +41,22 @@
             font-family: Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', sans-serif;
 
         }
+        .nav-align {
+            text-align: center;
+            line-height: 50px;
+            font-weight: bold;
+        }
 
         .nav-left {
-            float: left;
+            float: inline-start;
+        }
+        .nav-middle {
+            font-size: 20px;
         }
 
         .nav-right {
-            float: right;
-            font-weight: bold;
-            line-height: 80px;
+            float: inline-end;
+
         }
 
 
@@ -132,7 +139,11 @@
             margin-top: 10px;
             position: relative;
             z-index: 1;
+        }
 
+        /*카드 주소 박스 크기 고정*/
+        .card-address-align {
+            height: 120px;
         }
 
         .like-button {
@@ -265,14 +276,14 @@
 <body>
 
 <!--네비게이션 바-->
-<nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
-    <div class="navbar-brand nav-left">
-        <a class="navbar-item">
-            <img src="">
-            <strong class="is-sparta"
-                    style="font-family: 'Stylish', sans-serif;font-size: larger;">Home</strong>
-        </a>
+<nav class="navbar is-fixed-top is-white nav-align" role="navigation" aria-label="main navigation">
+    <!-- 네비게이션 아이콘 위치 -->
+    <div class="nav-left">
+            <img src="">이미지
     </div>
+    <!-- 로그인 닉네임 따라 인사 -->
+    <div class="nav-middle">혼서옵서예 {{ user_info['username'] }}님</div>
+    <!-- 로그아웃 -->
     <div class="nav-right"><a onclick="sign_out()">로그아웃</a></div>
 </nav>
 
@@ -376,7 +387,7 @@
             <div onclick='$("#modal-post").addClass("is-active").attr("cafe_name", "{{cafe.cafe_name}}"); showComments("{{cafe.cafe_name}}")'>
                 <img class="card-img-top" src="{{ cafe.cafe_thumbnail_url }}"
                      alt="Card image cap">
-                <div class="card-body">
+                <div class="card-body card-address-align">
                     <h5 class="card-title" id="card-selected"><b>{{ cafe.cafe_name }}</b></h5>
                     <p class="card-text">{{ cafe.cafe_address }}</p>
                 </div>
