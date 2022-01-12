@@ -32,11 +32,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Dokdo&display=swap" rel="stylesheet">
     <!-- 프리텐다드 적용 -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+    <link rel="stylesheet" type="text/css"
+          href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css"/>
     <!--og태그-->
     <meta property="og:title" content="돌하르방의 티타임"/>
     <meta property="og:description" content="제주도 카페 지역별로 찾아보고 코멘트를 달아주세요!"/>
-    <meta property="og:image" content="{{ url_for('static', filename='ogimage.jpeg') }}" />
+    <meta property="og:image" content="{{ url_for('static', filename='ogimage.jpeg') }}"/>
 
     <title>돌하르방의 티타임 | 메인페이지</title>
     <style>
@@ -55,6 +56,7 @@
         .nav-left {
             float: inline-start;
         }
+
         .nav-middle {
             font-size: 20px;
         }
@@ -180,7 +182,6 @@
 
     </style>
     <script>
-        <!-- 코멘트 추가하기 -->
         function post() {
             // 모달 내에서 '포스팅하기' 클릭 시 댓글, 점수, 작성한 카페 값 가져오기
             // $('#modal-post').attr('cafe_name')을 가져올 수 있는 이유는 카드 클릭 시 값을 부여해주었기 때문.
@@ -188,24 +189,30 @@
             let score = $('#score-box').val()
             let comment = $('#comment-box').val()
 
-            $.ajax({
-                type: "POST",
-                url: "/api/comment",
-                data: {
-                    cafe_name_give: cafe_name,
-                    //jinja2 언어 활용해서 현재 접속한 사용자의 nickname 가져오기
-                    //user_info는 app.py 내 def home()에 지정되어 있음.
-                    nickname_give: `{{user_info['nickname']}}`,
-                    score_give: score,
-                    comment_give: comment
-                },
-                success: function (response) {
-                    alert(response["msg"])
-                    window.location.reload();
+            if (score == "SCORE") {
+                alert('별점을 입력해주세요');
+                return
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/api/comment",
+                    data: {
+                        cafe_name_give: cafe_name,
+                        //jinja2 언어 활용해서 현재 접속한 사용자의 nickname 가져오기
+                        //user_info는 app.py 내 def home()에 지정되어 있음.
+                        nickname_give: `{{user_info['nickname']}}`,
+                        score_give: score,
+                        comment_give: comment
+                    },
+                    success: function (response) {
+                        alert(response["msg"])
+                        window.location.reload();
 
-                }
-            });
+                    }
+                });
+            }
         }
+
         <!-- 카페 추가하기 -->
         function Add_newcafe() {
             //포스팅 박스 내에서 '카페 추가하기' 클릭시 Val들 Ajax로 받아오기
@@ -221,7 +228,7 @@
                     CafeName_give: name,
                     CafeArea_give: Area,
                     CafeAddress_give: Address,
-                    CafeImgurl_give : Imgurl
+                    CafeImgurl_give: Imgurl
                 },
                 success: function (response) {
                     alert(response["msg"])
@@ -239,7 +246,8 @@
         }
 
         //카페 카드 이미지 클릭 시, 모달에서 작성한 코멘트 보여주기
-        // 하단에서 onclick = showComments('{{cafe.cafe_name}}')을 통해 cafe_name에 들어갈 값 받아온 후 함수 내에서 대입
+        // 하단에서 onclick = showComments('cafe.cafe_name')을 통해 cafe_name에 들어갈 값 받아온 후 함수 내에서 대입
+
         function showComments(cafe_name) {
             $.ajax({
                 type: "GET",
@@ -269,6 +277,7 @@
                 }
             })
         }
+
         <!-- 카페 추가 포스팅 박스 열고 닫기 -->
         function openClose() {
             let status = $('#post-box').css('display');
@@ -315,7 +324,7 @@
 <nav class="navbar is-fixed-top is-white nav-align" role="navigation" aria-label="main navigation">
     <!-- 네비게이션 좌측 돌하르방 이미지 위치 알려주기 -->
     <div class="nav-left">
-            <img src="{{ url_for('static', filename='main_icon.png') }}">
+        <img src="{{ url_for('static', filename='main_icon.png') }}">
     </div>
     <!-- 로그인 닉네임 따라 인사 -->
     <div class="nav-middle">🍊 혼저옵서예 {{ user_info['nickname'] }}님 🍊</div>
@@ -397,7 +406,7 @@
                     </select>
                 </div>
                 <div class="icon is-small is-left">
-                     <i class="fas fa-map-marker-alt"></i>
+                    <i class="fas fa-map-marker-alt"></i>
                 </div>
             </div>
             <div class="level-item">
@@ -426,15 +435,17 @@
 
             <!-- id값 #modal-post 에 cafe_name 이라는 임의의 속성값을 각 카드에 심어두고,
                 카드를 선택하여 modal 이 열릴 때 해당 속성값으로 cafe_name 을 가져온다. -->
-            <div >
-                <img class="card-img-top" src="{{ cafe.cafe_thumbnail_url }}" <!-- 사진 클릭시에만 comment 보여주기 위해 showcomment 함수 넣음 -->
-                     alt="Card image cap" onclick='showComments("{{cafe.cafe_name}}"); $("#modal-post").addClass("is-active").attr("cafe_name","{{cafe.cafe_name}}");'>
+            <div>
+                <!-- 사진 클릭시에만 comment 보여주기 위해 showcomment 함수 넣음 -->
+                <img class="card-img-top" src="{{ cafe.cafe_thumbnail_url }}"
+                     alt="Card image cap"
+                     onclick='showComments("{{cafe.cafe_name}}"); $("#modal-post").addClass("is-active").attr("cafe_name","{{cafe.cafe_name}}");'>
                 <div class="card-body card-address-align">
                     <div href="#" class="like-button" onclick="like_post('{{ cafe.cafe_name }}') ">
                         {% if cafe.cafe_name in user_info.like %}
-                            <i class="fas fa-heart fa-lg like-button-1"></i>
+                        <i class="fas fa-heart fa-lg like-button-1"></i>
                         {% else %}
-                            <i class="far fa-heart fa-lg"></i>
+                        <i class="far fa-heart fa-lg"></i>
                         {% endif %}
                     </div>
                     <h5 class="card-title" id="card-selected"><b>{{ cafe.cafe_name }}</b></h5>
@@ -513,6 +524,7 @@
                         <div class="level-right">
                             <div class="level-item">
                                 <!-- 포스팅하기 버튼 클릭 시 코멘트 저장하는 함수인 post()로 넘어가도록 설정 -->
+
                                 <a class="button is-sparta" onclick="post()">포스팅하기</a>
                             </div>
                             <div class="level-item">
