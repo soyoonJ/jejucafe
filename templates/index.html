@@ -239,7 +239,7 @@
         }
 
         //카페 카드 이미지 클릭 시, 모달에서 작성한 코멘트 보여주기
-        // 하단에서 onclick = showComments('{{cafe.cafe_name}}')을 통해 cafe_name에 들어갈 값 받아온 후 함수 내에서 대입
+        // 하단에서 onclick = showComments('{cafe.cafe_name}}')을 통해 cafe_name에 들어갈 값 받아온 후 함수 내에서 대입
         function showComments(cafe_name) {
             $.ajax({
                 type: "GET",
@@ -427,8 +427,8 @@
             <!-- id값 #modal-post 에 cafe_name 이라는 임의의 속성값을 각 카드에 심어두고,
                 카드를 선택하여 modal 이 열릴 때 해당 속성값으로 cafe_name 을 가져온다. -->
             <div >
-                <img class="card-img-top" src="{{ cafe.cafe_thumbnail_url }}" <!-- 사진 클릭시에만 comment 보여주기 위해 showcomment 함수 넣음 -->
-                     alt="Card image cap" onclick='showComments("{{cafe.cafe_name}}"); $("#modal-post").addClass("is-active").attr("cafe_name","{{cafe.cafe_name}}");'>
+                <!-- 사진 클릭시에만 comment 보여주기 위해 showcomment 함수 넣음 -->
+                <img class="card-img-top" src="{{ cafe.cafe_thumbnail_url }}" alt="Card image cap" onclick='showComments("{{cafe.cafe_name}}"); $("#modal-post").addClass("is-active").attr("cafe_name","{{cafe.cafe_name}}");'>
                 <div class="card-body card-address-align">
                     <div href="#" class="like-button" onclick="like_post('{{ cafe.cafe_name }}') ">
                         {% if cafe.cafe_name in user_info.like %}
