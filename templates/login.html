@@ -186,6 +186,16 @@
                 alert("아이디 중복확인을 해주세요.")
                 return;
             }
+
+            // 닉네임 확인 여부, 적합성 여부 확인
+            if ($("#help-nickname").hasClass("is-danger")) {
+                alert("닉네임을 다시 확인해주세요.")
+                return;
+            } else if (!$("#help-nickname").hasClass("is-success")) {
+                alert("닉네임 중복확인을 해주세요.")
+                return;
+            }
+            
             // 비밀번호 입력칸이 비었을때
             if (password == "") {
                 $("#help-password").text("비밀번호를 입력해주세요.").removeClass("is-safe").addClass("is-danger")
@@ -210,7 +220,9 @@
                 return;
             } else {
                 $("#help-password2").text("비밀번호가 일치합니다.").removeClass("is-danger").addClass("is-success")
-            } //회원가입시 클라이언트 작성 내용 Ajax로 받아오기
+            }
+            
+            //회원가입시 클라이언트 작성 내용 Ajax로 받아오기
             $.ajax({
                 type: "POST",
                 url: "/api/signup",
