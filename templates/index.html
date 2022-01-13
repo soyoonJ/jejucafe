@@ -216,10 +216,11 @@
             // 모달 내에서 '포스팅하기' 클릭 시 댓글, 점수, 작성한 카페 값 가져오기
             // $('#modal-post').attr('cafe_name')을 가져올 수 있는 이유는 카드 클릭 시 값을 부여해주었기 때문.
             let cafe_name = $('#modal-post').attr('cafe_name');
-            // let score = $('#score-box').val()
+            // let score에서 별점 라디오 선택값 가져오고 예외처리 진행
             let score = $("input[name='rate']:checked").val()
             let comment = $('#comment-box').val()
 
+            // console.log(score)하고 별점 미입력 상태에서 포스팅하기 클릭하면, 콘솔창에 undefined 나옴
             if (score == undefined) {
                 alert('별점을 입력해주세요');
                 return
