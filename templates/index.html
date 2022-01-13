@@ -431,6 +431,7 @@
         <div class="level-right">
             <div class="control has-icons-left level-item">
                 <div class="select is-rounded is-link" style="display: inline-block">
+                    <!-- select dropdown 내에서 option 값 변경 시 ./api/posts/?area=%지역이름% url로 곧바로 이동-->
                     <select name="area" onchange="change_url(this.value);">
                         <option selected>지역</option>
                         <option value="지역전체">전체보기</option>
@@ -464,7 +465,7 @@
     <!--카드-->
 
     <div class="card-columns">
-        {# jinja2 카드 내용 불러오기 #}
+        <!-- jinja2 에서 넘긴 user_info, cafe_lists 항목과 for문 사용하여 카드 내용 불러오기 -->
         {% for cafe in cafe_lists %}
         <div class="card" id="selected-card">
 
