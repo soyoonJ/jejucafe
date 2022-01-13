@@ -180,18 +180,51 @@
             cursor: pointer;
         }
 
+        .star-text {
+            margin: 0px 10px 0px 5px;
+
+            color: #676767;
+            font-size: 20px;
+            display: none;
+        }
+
+        .star-widget input {
+            display: none;
+        }
+
+
+        .star-widget label{
+            color: #444;
+            transition: all 0.2s ease;
+            float: right;
+            padding: 2px;
+            font-size: 30px;
+        }
+
+        input:not(:checked) ~ label:hover,
+        input:not(:checked) ~ label:hover ~ label{
+            color: #fd4;
+        }
+
+        input:checked ~ label{
+            color: #fd4;
+        }
+
     </style>
     <script>
         function post() {
             // 모달 내에서 '포스팅하기' 클릭 시 댓글, 점수, 작성한 카페 값 가져오기
             // $('#modal-post').attr('cafe_name')을 가져올 수 있는 이유는 카드 클릭 시 값을 부여해주었기 때문.
             let cafe_name = $('#modal-post').attr('cafe_name');
-            let score = $('#score-box').val()
+            // let score = $('#score-box').val()
+            let score = $("input[name='rate']:checked").val()
             let comment = $('#comment-box').val()
 
-            if (score == "SCORE") {
+            if (score == undefined) {
                 alert('별점을 입력해주세요');
                 return
+            } else if (comment == '') {
+                alert('코멘트를 입력해주세요');
             } else {
                 $.ajax({
                     type: "POST",
@@ -501,14 +534,18 @@
                         <!-- score 드롭박스 만들어서 코멘트 저장 시 값을 같이 저장할 수 있도록 함 -->
                         <!-- 숫자값 대신 별 이모지로 삽입. 데이터에도 문자로 들어가고 노출도 정상 작동 -->
                         <div class="btn-group">
-                            <select class="custom-select my-1 mr-sm-2" id="score-box">
-                                <option selected>SCORE</option>
-                                <option value="⭐⭐⭐⭐⭐">⭐⭐⭐⭐⭐</option>
-                                <option value="⭐⭐⭐⭐">⭐⭐⭐⭐</option>
-                                <option value="⭐⭐⭐">⭐⭐⭐</option>
-                                <option value="⭐⭐">⭐⭐</option>
-                                <option value="⭐">⭐</option>
-                            </select>
+                            <span class="star-text">당신의 별점은?</span><div class="star-widget" id="star">
+                                <input type="radio" name="rate" id="rate-5" value="⭐⭐⭐⭐⭐">
+                                <label for="rate-5" class="fas fa-star"></label>
+                                <input type="radio" name="rate" id="rate-4" value="⭐⭐⭐⭐">
+                                <label for="rate-4" class="fas fa-star"></label>
+                                <input type="radio" name="rate" id="rate-3" value="⭐⭐⭐">
+                                <label for="rate-3" class="fas fa-star"></label>
+                                <input type="radio" name="rate" id="rate-2" value="⭐⭐">
+                                <label for="rate-2" class="fas fa-star"></label>
+                                <input type="radio" name="rate" id="rate-1" value="⭐">
+                                <label for="rate-1" class="fas fa-star"></label>
+                            </div>
                         </div>
 
                         <textarea id="comment-box" class="textarea" placeholder="코멘트를 작성하세요"></textarea>
