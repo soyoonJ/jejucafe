@@ -256,7 +256,24 @@
             let Address = $('#New-address').val()
             let Imgurl = $('#Img-url').val()
 
-            $.ajax({
+            if (name == '') {
+                $('#New-name').focus()
+                alert('카페명을 입력하여 주세요');
+                return;
+            } else if (Imgurl == '') {
+                $('#Img-url').focus()
+                alert('이미지 url을 입력하여 주세요');
+                return;
+            } else if (Area == '') {
+                $('#New-Area').focus()
+                alert('지역을 선택해 주세요');
+                return;
+            } else if (Address == '') {
+                $('#New-address').focus()
+                alert("세부주소를 입력하여 주세요");
+                return;
+            } else {
+                $.ajax({
                 type: "POST",
                 url: "/api/create",
                 data: {
@@ -269,15 +286,21 @@
                     alert(response["msg"])
                     window.location.reload()
                 }
-            })
+            });
+
+            }
+
+
         }
 
         function searchCafe() {
             let cafe_name = $('#search-string').val()
-            if (cafe_name == "")
+            if (cafe_name == "") {
+                $('#search-string').focus()
                 alert('검색할 카페 이름을 입력해주세요.')
-            else
+            } else {
                 window.location = '/api/search?cafe_name=' + cafe_name
+            }
         }
 
         //카페 카드 이미지 클릭 시, 모달에서 작성한 코멘트 보여주기
@@ -452,7 +475,7 @@
                     </p>
                     <p class="control">
                         <button class="button is-info is-rounded" onclick="searchCafe()">
-                            Search
+                           검색
                         </button>
                     </p>
                 </div>
